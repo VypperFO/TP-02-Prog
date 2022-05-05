@@ -7,12 +7,12 @@ public class ViewInv {
     JFrame frame;
     JTable tabInv, tabEnt;
     DefaultTableModel modelInv, modelEnt;
-    JButton btnFiltre, btnPlusInv, btnMoinsInv, btnPlusEnt, btnMoinsEnt;
+    JButton btnFiltre, btnPlusInv, btnMoinsInv, btnPlusEnt, btnMoinsEnt, btnQuit;
     JTextField txfRecherche;
     JMenuBar menuBar;
     JMenu menuTP2, menuFichier;
     JMenuItem miPropos, miQuit, miNouveau, miOuvrir, miFermer, miSave, miSaveTo, miExport;
-    JPanel panWest, panEast, panItemsInv, panBtnInv, panBtnEnt;
+    JPanel panWest, panEast, panItemsInv, panBtnInv, panBtnEnt, panQuit;
 
     Dimension dimTxf = new Dimension(125, 25);
     Dimension dimBtn = new Dimension(125, 25);
@@ -20,19 +20,15 @@ public class ViewInv {
     String[] colNamesInv = { "Nom", "Categorie", "Prix", "Date achat", "Description" };
     String[] colNamesEnt = { "Date", "Description" };
 
-    String[][] data = {
-    {"1", "pdA", "Le produit A", "pdA", "Le produit A"},
-    {"2", "pdB", "Le produit B", "pdA", "Le produit A"},
-    {"3", "pdC", "Le produit C", "pdA", "Le produit A"}
-};
     public ViewInv() {
         frame = new JFrame("salope de tp");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(1000, 800);
         frame.setLocationRelativeTo(null);
+        frame.setLayout(new BorderLayout(10, 10));
 
 
-        // Menu TP 2
+        // MENU TP-2
         menuTP2 = new JMenu("TP-2");
 
         miPropos = new JMenuItem("À propos");
@@ -43,7 +39,7 @@ public class ViewInv {
         menuTP2.addSeparator();
         menuTP2.add(miQuit);
 
-        // Menu Fichier
+        // MENU FICHIER
         menuFichier = new JMenu("Fichier");
 
         miNouveau = new JMenuItem("Nouveau...");
@@ -62,7 +58,7 @@ public class ViewInv {
         menuFichier.addSeparator();
         menuFichier.add(miExport);
 
-        // Menu bar
+        // MENU BAR
         menuBar = new JMenuBar();
         menuBar.add(menuTP2);
         menuBar.add(menuFichier);
@@ -73,16 +69,22 @@ public class ViewInv {
         // BUTTONS
         btnFiltre = new JButton("Filtre");
 
-        btnFiltre.setMaximumSize(dimBtn);
         btnPlusInv = new JButton("+");
         btnPlusInv.setPreferredSize(dimBtn);
+        btnPlusInv.addActionListener(e -> btnPlusInvAction());
+
         btnMoinsInv = new JButton("-");
         btnMoinsInv.setPreferredSize(dimBtn);
 
         btnPlusEnt = new JButton("+");
         btnPlusEnt.setPreferredSize(dimBtn);
+        btnPlusEnt.addActionListener(e -> btnPlusEntAction());
+
         btnMoinsEnt = new JButton("-");
         btnMoinsEnt.setPreferredSize(dimBtn);
+
+        btnQuit = new JButton("Quitter");
+        btnQuit.setPreferredSize(dimBtn);
         
         // TABLES
         modelInv = new DefaultTableModel();
@@ -95,7 +97,6 @@ public class ViewInv {
         JScrollPane scrollPaneEnt = new JScrollPane(tabEnt);
         scrollPaneEnt.setPreferredSize(new Dimension(100, 100));
 
-
         // PANEL
         panItemsInv = new JPanel();
         panItemsInv.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -107,18 +108,39 @@ public class ViewInv {
         panBtnInv.add(btnPlusInv);
         panBtnInv.add(btnMoinsInv);
 
-        panEast = new JPanel();
-        panEast.setLayout(new FlowLayout());
-        panEast.add(tabEnt);
-        panEast.add(btnPlusEnt);
-        panEast.add(btnMoinsEnt);
+        panWest = new JPanel();
+        panWest.setLayout(new BorderLayout());
+        panWest.add(tabInv, BorderLayout.CENTER);
+        panWest.add(panBtnInv, BorderLayout.SOUTH);
 
+        panBtnEnt = new JPanel();
+        panBtnEnt.add(btnPlusEnt);
+        panBtnEnt.add(btnMoinsEnt);
+
+        panEast = new JPanel();
+        panEast.setLayout(new BorderLayout());
+        panEast.add(tabEnt, BorderLayout.CENTER);
+        panEast.add(panBtnEnt, BorderLayout.SOUTH);
+
+        panQuit = new JPanel();
+        panQuit.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        panQuit.add(btnQuit);
+
+        // FRAME
         frame.add(panItemsInv, BorderLayout.NORTH);
-        frame.add(tabInv, BorderLayout.CENTER);
-        frame.add(panBtnInv, BorderLayout.SOUTH);
+        frame.add(panWest, BorderLayout.CENTER);
         frame.add(panEast, BorderLayout.EAST);
+        frame.add(panQuit, BorderLayout.SOUTH);
         frame.setJMenuBar(menuBar);
         frame.setVisible(true);
+    }
+
+    private void btnPlusEntAction() {
+        ViewAjoutEnt ajout = new ViewAjoutEnt();
+    }
+
+    private void btnPlusInvAction() {
+        ViewAjoutInv ajout = new ViewAjoutInv();
     }
 
     private void miProposAction() {
