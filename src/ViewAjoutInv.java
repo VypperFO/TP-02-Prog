@@ -14,7 +14,7 @@ public class ViewAjoutInv {
     JComboBox cmbCategorie;
     JPanel panCenter, panBtn;
 
-    String[] categories = { "Jeux", "Cameras", "Salopes" };
+    String[] categories = { "Jeux", "Cameras", "Tripod", "Autres" };
     Dimension dimTf = new Dimension(250, 25);
     Dimension dimLab = new Dimension(100, 25);
     Dimension dimBtn = new Dimension(100, 25);

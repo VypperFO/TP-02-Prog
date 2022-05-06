@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.awt.event.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -8,10 +9,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.regex.PatternSyntaxException;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 public class ViewInv {
     JFrame frame;
@@ -91,9 +94,39 @@ public class ViewInv {
         txfRecherche = new JTextField();
         txfRecherche.setPreferredSize(dimTxf);
 
+        // TABLES
+        listInventaire = listInventaire();
+
+        modelInv = new DefaultTableModel(colNamesInv, 0);
+
+        tabInv = new JTable(modelInv);
+        tabInv.setCellSelectionEnabled(false);
+        tabInv.setAutoCreateRowSorter(true);
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel>(modelInv);
+        tabInv.setRowSorter(sorter);
+
+        modelEnt = new DefaultTableModel(colNamesEnt, 0);
+        tabEnt = new JTable(modelEnt);
+        tabEnt.setCellSelectionEnabled(false);
+
         // BUTTONS
         btnFiltre = new JButton("Filtre");
-        btnFiltre.addActionListener(e -> btnFiltreAction());
+        btnFiltre.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String text = txfRecherche.getText();
+                if (text.length() == 0) {
+                    sorter.setRowFilter(null);
+                } else {
+                    try {
+                        sorter.setRowFilter(RowFilter.regexFilter(text));
+                        tabInv.getSelectionModel().clearSelection();
+                    } catch (PatternSyntaxException pse) {
+                        JOptionPane.showMessageDialog(frame, "Une Erreur est Survenue");
+                    }
+                }
+            }
+        });
 
         btnPlusInv = new JButton("+");
         btnPlusInv.setPreferredSize(dimBtn);
@@ -114,18 +147,6 @@ public class ViewInv {
         btnQuit = new JButton("Quitter");
         btnQuit.setPreferredSize(dimBtn);
         btnQuit.addActionListener(e -> btnQuitAction());
-
-        // TABLES
-        listInventaire = listInventaire();
-
-        modelInv = new DefaultTableModel(colNamesInv, 0);
-
-        tabInv = new JTable(modelInv);
-        tabInv.setCellSelectionEnabled(false);
-
-        modelEnt = new DefaultTableModel(colNamesEnt, 0);
-        tabEnt = new JTable(modelEnt);
-        tabEnt.setCellSelectionEnabled(false);
 
         // PANEL
         panItemsInv = new JPanel();
@@ -272,9 +293,6 @@ public class ViewInv {
      * 
      * @@@@@@@@@@@@@@
      */
-    private Object btnFiltreAction() {
-        return null;
-    }
 
     private Object btnMoinsInvAction() {
         return null;
