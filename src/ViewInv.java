@@ -1,7 +1,16 @@
 import java.awt.*;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.time.LocalDate;
+import java.util.ArrayList;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
 public class ViewInv {
@@ -22,7 +31,9 @@ public class ViewInv {
     String[] colNamesInv = { "Nom", "Categorie", "Prix", "Date achat", "Description" };
     String[] colNamesEnt = { "Date", "Description" };
 
-    public ViewInv() {
+    static ArrayList<Inventaire> listInventaire;
+
+    public ViewInv() throws IOException {
         frame = new JFrame("salope de tp");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(1000, 800);
@@ -34,7 +45,9 @@ public class ViewInv {
 
         miPropos = new JMenuItem("À propos");
         miPropos.addActionListener(e -> miProposAction());
+
         miQuit = new JMenuItem("Quitter");
+        miQuit.addActionListener(e -> miQuitAction());
 
         menuTP2.add(miPropos);
         menuTP2.addSeparator();
@@ -47,10 +60,19 @@ public class ViewInv {
         miNouveau.addActionListener(e -> miNouveauAction());
 
         miOuvrir = new JMenuItem("Ouvrir...");
+        miOuvrir.addActionListener(e -> miOuvrirAction());
+
         miFermer = new JMenuItem("Fermer");
+        miFermer.addActionListener(e -> miFermerAction());
+
         miSave = new JMenuItem("Enregistrer");
+        miSave.addActionListener(e -> miSaveAction());
+
         miSaveTo = new JMenuItem("Enregistrer sous...");
+        miSaveTo.addActionListener(e -> miSaveToAction());
+
         miExport = new JMenuItem("Exporter...");
+        miExport.addActionListener(e -> miExportAction());
 
         menuFichier.add(miNouveau);
         menuFichier.add(miOuvrir);
@@ -71,6 +93,7 @@ public class ViewInv {
 
         // BUTTONS
         btnFiltre = new JButton("Filtre");
+        btnFiltre.addActionListener(e -> btnFiltreAction());
 
         btnPlusInv = new JButton("+");
         btnPlusInv.setPreferredSize(dimBtn);
@@ -78,6 +101,7 @@ public class ViewInv {
 
         btnMoinsInv = new JButton("-");
         btnMoinsInv.setPreferredSize(dimBtn);
+        btnMoinsInv.addActionListener(e -> btnMoinsInvAction());
 
         btnPlusEnt = new JButton("+");
         btnPlusEnt.setPreferredSize(dimBtn);
@@ -85,20 +109,23 @@ public class ViewInv {
 
         btnMoinsEnt = new JButton("-");
         btnMoinsEnt.setPreferredSize(dimBtn);
+        btnMoinsEnt.addActionListener(e -> btnMoinsEntAction());
 
         btnQuit = new JButton("Quitter");
         btnQuit.setPreferredSize(dimBtn);
+        btnQuit.addActionListener(e -> btnQuitAction());
 
         // TABLES
-        modelInv = new DefaultTableModel();
-        tabInv = new JTable(modelInv);
-        JScrollPane scrollPaneInv = new JScrollPane(tabInv);
-        scrollPaneInv.setPreferredSize(new Dimension(100, 100));
+        listInventaire = listInventaire();
 
-        modelEnt = new DefaultTableModel();
+        modelInv = new DefaultTableModel(colNamesInv, 0);
+
+        tabInv = new JTable(modelInv);
+        tabInv.setCellSelectionEnabled(false);
+
+        modelEnt = new DefaultTableModel(colNamesEnt, 0);
         tabEnt = new JTable(modelEnt);
-        JScrollPane scrollPaneEnt = new JScrollPane(tabEnt);
-        scrollPaneEnt.setPreferredSize(new Dimension(100, 100));
+        tabEnt.setCellSelectionEnabled(false);
 
         // PANEL
         panItemsInv = new JPanel();
@@ -113,7 +140,7 @@ public class ViewInv {
 
         panWest = new JPanel();
         panWest.setLayout(new BorderLayout());
-        panWest.add(tabInv, BorderLayout.CENTER);
+        panWest.add(new JScrollPane(tabInv), BorderLayout.CENTER);
         panWest.add(panBtnInv, BorderLayout.SOUTH);
 
         panBtnEnt = new JPanel();
@@ -122,7 +149,7 @@ public class ViewInv {
 
         panEast = new JPanel();
         panEast.setLayout(new BorderLayout());
-        panEast.add(tabEnt, BorderLayout.CENTER);
+        panEast.add(new JScrollPane(tabEnt), BorderLayout.CENTER);
         panEast.add(panBtnEnt, BorderLayout.SOUTH);
 
         panQuit = new JPanel();
@@ -138,9 +165,126 @@ public class ViewInv {
         frame.setVisible(true);
     }
 
+    /*
+     * @@@@@@@@@@@@@
+     * 
+     * @@@ Menu @@@
+     * 
+     * @@@@@@@@@@@@@@
+     */
+
+    private void miProposAction() {
+        JOptionPane.showMessageDialog(frame,
+                "Travail Pratique 2 \n Félix-Olivier Latulippe 2173242 \n Session H2022 \n Dans le cadre du cours 420-C27",
+                "À propos", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private Object miQuitAction() {
+        return null;
+    }
+
     private void miNouveauAction() {
         fc.setDialogTitle("Nouveau inventaire...");
         int rep = fc.showSaveDialog(frame);
+    }
+
+    private void miOuvrirAction() {
+        fc.setDialogTitle("Ouverture inventaire");
+
+        FileNameExtensionFilter fileFilter = new FileNameExtensionFilter("*.dat", "dat");
+        fc.setFileFilter(fileFilter);
+
+        fc.addChoosableFileFilter(new FileNameExtensionFilter("*.dat", "dat"));
+
+        int rep = fc.showOpenDialog(frame);
+        if (rep == JFileChooser.APPROVE_OPTION) {
+            File fichier = fc.getSelectedFile();
+
+            String filePath = fichier.getPath();
+            try {
+                readFileObject(filePath);
+                for (Inventaire object : listInventaire) {
+                    modelInv.addRow(
+                            new Object[] { object.getNom(), object.getCategorie(), object.getPrix(),
+                                    object.getDateAchat(),
+                                    object.getDescription() });
+                }
+                update();
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(frame, "Error");
+            }
+        }
+    }
+
+    private void miFermerAction() {
+        listInventaire.clear();
+    }
+
+    private void miSaveAction() {
+        if (isInventaireOuvert()) {
+            File fichier = fc.getSelectedFile();
+            String filePath = fichier.getPath();
+
+            try {
+                writeFileObject(filePath);
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(frame, "Error");
+            }
+        } else {
+            JOptionPane.showMessageDialog(frame, "Aucun inventaire ouvert");
+        }
+    }
+
+    private void miSaveToAction() {
+        fc.setDialogTitle("Enregistrement inventaire");
+
+        FileNameExtensionFilter fileFilter = new FileNameExtensionFilter("*.dat", "dat");
+        fc.setFileFilter(fileFilter);
+
+        fc.addChoosableFileFilter(new FileNameExtensionFilter("*.dat", "dat"));
+
+        if (isInventaireOuvert()) {
+            int rep = fc.showSaveDialog(frame);
+
+            if (rep == JFileChooser.APPROVE_OPTION) {
+                File fichier = fc.getSelectedFile();
+
+                String filePath = fichier.getPath();
+                try {
+                    writeFileObject(filePath);
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(frame, "Error");
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(frame, "Aucun inventaire ouvert");
+        }
+    }
+
+    private Object miExportAction() {
+        return null;
+    }
+
+    /*
+     * @@@@@@@@@@@@@@
+     * 
+     * @@@ Button @@@
+     * 
+     * @@@@@@@@@@@@@@
+     */
+    private Object btnFiltreAction() {
+        return null;
+    }
+
+    private Object btnMoinsInvAction() {
+        return null;
+    }
+
+    private Object btnQuitAction() {
+        return null;
+    }
+
+    private void btnMoinsEntAction() {
     }
 
     private void btnPlusEntAction() {
@@ -151,13 +295,59 @@ public class ViewInv {
         ViewAjoutInv ajout = new ViewAjoutInv();
     }
 
-    private void miProposAction() {
-        JOptionPane.showMessageDialog(frame,
-                "Travail Pratique 2 \n Félix-Olivier Latulippe 2173242 \n Session H2022 \n Dans le cadre du cours 420-C27",
-                "À propos", JOptionPane.INFORMATION_MESSAGE);
+    /*
+     * @@@@@@@@@@@@@@@@
+     * 
+     * @@@ Methodes @@@
+     * 
+     * @@@@@@@@@@@@@@@@
+     */
+
+    public ArrayList<Inventaire> listInventaire() {
+        ArrayList<Inventaire> list = new ArrayList<>();
+
+        return list;
     }
 
-    public static void main(String[] args) {
+    public boolean isInventaireOuvert() {
+        if (modelInv.getRowCount() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void update() {
+
+    }
+
+    public void writeFileObject(String fileName) throws IOException {
+        ObjectOutputStream sortie = new ObjectOutputStream(new FileOutputStream(fileName));
+
+        sortie.write(listInventaire.size());
+        for (Inventaire object : listInventaire) {
+            sortie.writeObject(object);
+        }
+
+        sortie.close();
+    }
+
+    public void readFileObject(String fileName) throws IOException, ClassNotFoundException {
+        try {
+            ObjectInputStream entree = new ObjectInputStream(new FileInputStream(fileName));
+
+            int nb = entree.read();
+            for (int i = 0; i < nb; i++) {
+                listInventaire.add((Inventaire) entree.readObject());
+            }
+
+            entree.close();
+        } catch (FileNotFoundException e) {
+            JOptionPane.showMessageDialog(frame, "Could not read file");
+        }
+    }
+
+    public static void main(String[] args) throws IOException {
         new ViewInv();
     }
 }

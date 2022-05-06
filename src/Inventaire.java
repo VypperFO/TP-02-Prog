@@ -1,20 +1,20 @@
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.LinkedHashMap;
 
-public class Inventaire {
+public class Inventaire implements Serializable {
     private String nom, description, categorie;
     private int prix, numSerie;
     private LocalDate dateAchat;
     private LinkedHashMap<LocalDate, String> entretien;
 
-    public Inventaire(String nom, String description, String categorie, int prix, int numSerie, LocalDate dateAchat, LinkedHashMap<LocalDate, String> entretien) {
+    public Inventaire(String nom, String description, String categorie, int prix, int numSerie) {
         this.nom = nom;
         this.description = description;
         this.categorie = categorie;
         this.prix = prix;
         this.numSerie = numSerie;
-        this.dateAchat = dateAchat;
-        this.entretien = entretien;
+        // this.dateAchat = dateAchat;
     }
 
     public String getNom() {
