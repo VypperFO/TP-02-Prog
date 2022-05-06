@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.io.File;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -13,6 +14,7 @@ public class ViewInv {
     JMenu menuTP2, menuFichier;
     JMenuItem miPropos, miQuit, miNouveau, miOuvrir, miFermer, miSave, miSaveTo, miExport;
     JPanel panWest, panEast, panItemsInv, panBtnInv, panBtnEnt, panQuit;
+    JFileChooser fc = new JFileChooser();
 
     Dimension dimTxf = new Dimension(125, 25);
     Dimension dimBtn = new Dimension(125, 25);
@@ -26,7 +28,6 @@ public class ViewInv {
         frame.setSize(1000, 800);
         frame.setLocationRelativeTo(null);
         frame.setLayout(new BorderLayout(10, 10));
-
 
         // MENU TP-2
         menuTP2 = new JMenu("TP-2");
@@ -43,6 +44,8 @@ public class ViewInv {
         menuFichier = new JMenu("Fichier");
 
         miNouveau = new JMenuItem("Nouveau...");
+        miNouveau.addActionListener(e -> miNouveauAction());
+
         miOuvrir = new JMenuItem("Ouvrir...");
         miFermer = new JMenuItem("Fermer");
         miSave = new JMenuItem("Enregistrer");
@@ -65,7 +68,7 @@ public class ViewInv {
 
         txfRecherche = new JTextField();
         txfRecherche.setPreferredSize(dimTxf);
-        
+
         // BUTTONS
         btnFiltre = new JButton("Filtre");
 
@@ -85,13 +88,13 @@ public class ViewInv {
 
         btnQuit = new JButton("Quitter");
         btnQuit.setPreferredSize(dimBtn);
-        
+
         // TABLES
         modelInv = new DefaultTableModel();
         tabInv = new JTable(modelInv);
         JScrollPane scrollPaneInv = new JScrollPane(tabInv);
         scrollPaneInv.setPreferredSize(new Dimension(100, 100));
-        
+
         modelEnt = new DefaultTableModel();
         tabEnt = new JTable(modelEnt);
         JScrollPane scrollPaneEnt = new JScrollPane(tabEnt);
@@ -135,6 +138,11 @@ public class ViewInv {
         frame.setVisible(true);
     }
 
+    private void miNouveauAction() {
+        fc.setDialogTitle("Nouveau inventaire...");
+        int rep = fc.showSaveDialog(frame);
+    }
+
     private void btnPlusEntAction() {
         ViewAjoutEnt ajout = new ViewAjoutEnt();
     }
@@ -144,7 +152,9 @@ public class ViewInv {
     }
 
     private void miProposAction() {
-        JOptionPane.showMessageDialog(frame, "Travail Pratique 2 \n Félix-Olivier Latulippe 2173242 \n Session H2022 \n Dans le cadre du cours 420-C27", "À propos", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(frame,
+                "Travail Pratique 2 \n Félix-Olivier Latulippe 2173242 \n Session H2022 \n Dans le cadre du cours 420-C27",
+                "À propos", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public static void main(String[] args) {

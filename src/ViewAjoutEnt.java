@@ -14,7 +14,7 @@ public class ViewAjoutEnt {
     Dimension dimTf = new Dimension(250, 25);
     Dimension dimLab = new Dimension(100, 25);
     Dimension dimBtn = new Dimension(100, 25);
-    
+
     public ViewAjoutEnt() {
         // DIALOG
         dialog = new JDialog((JDialog) null, "Ajout", true);
@@ -36,12 +36,13 @@ public class ViewAjoutEnt {
         // TEXTAREA
         txaDescription = new JTextArea();
         txaDescription.setPreferredSize(new Dimension(250, 250));
-        
+
         // BOUTONS
         btnAjout = new JButton("Ajouter");
         btnAjout.setPreferredSize(dimBtn);
         btnCancel = new JButton("Annuler");
         btnCancel.setPreferredSize(dimBtn);
+        btnCancel.addActionListener(e -> btnCancelAction());
 
         // PANEL
         panCenter = new JPanel();
@@ -59,6 +60,10 @@ public class ViewAjoutEnt {
         dialog.add(panCenter, BorderLayout.CENTER);
         dialog.add(panBtn, BorderLayout.SOUTH);
         dialog.setVisible(true);
+    }
+
+    private void btnCancelAction() {
+        dialog.dispose();
     }
 
     public static void main(String[] args) {

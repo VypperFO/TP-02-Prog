@@ -68,6 +68,7 @@ public class ViewModifInv {
         btnAjout.setPreferredSize(dimBtn);
         btnCancel = new JButton("Annuler");
         btnCancel.setPreferredSize(dimBtn);
+        btnCancel.addActionListener(e -> btnCancelAction());
 
         // PANEL
         panCenter = new JPanel();
@@ -93,6 +94,10 @@ public class ViewModifInv {
         dialog.add(panCenter, BorderLayout.CENTER);
         dialog.add(panBtn, BorderLayout.SOUTH);
         dialog.setVisible(true);
+    }
+
+    private void btnCancelAction() {
+        dialog.dispose();
     }
 
     public static void main(String[] args) {
