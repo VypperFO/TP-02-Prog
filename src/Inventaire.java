@@ -17,6 +17,11 @@ public class Inventaire implements Serializable {
         // this.dateAchat = dateAchat;
     }
 
+    public Inventaire(String nom, int prix) {
+        this.nom = nom;
+        this.prix = prix;
+    }
+
     public String getNom() {
         return nom;
     }

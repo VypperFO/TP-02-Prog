@@ -1,9 +1,11 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -33,6 +35,8 @@ public class ViewInv {
 
     String[] colNamesInv = { "Nom", "Categorie", "Prix", "Date achat", "Description" };
     String[] colNamesEnt = { "Date", "Description" };
+
+    public boolean isSave = false;
 
     static ArrayList<Inventaire> listInventaire;
 
@@ -200,8 +204,27 @@ public class ViewInv {
                 "À propos", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    private Object miQuitAction() {
-        return null;
+    private void miQuitAction() {
+        int reponse = JOptionPane.showConfirmDialog(frame, "Voulez-vous quitter?", "Quitter",
+                JOptionPane.YES_NO_OPTION); // Réponse de l'utilisateur
+
+        if (reponse == JOptionPane.YES_OPTION) {
+            if (!isSave) {
+                int reponseSave = JOptionPane.showConfirmDialog(frame, "Voulez-vous sauvegarder?", "Quitter",
+                        JOptionPane.YES_NO_OPTION); // Réponse de l'utilisateur
+
+                if (reponseSave == JOptionPane.YES_OPTION) {
+                    try {
+                        miSaveToAction();
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                    }
+                    System.exit(0);
+                }
+            }
+
+            System.exit(0);
+        }
     }
 
     private void miNouveauAction() {
@@ -223,6 +246,11 @@ public class ViewInv {
 
             String filePath = fichier.getPath();
             try {
+                if (isInventaireOuvert()) {
+                    for (int i = 0; i < listInventaire.size(); i++) {
+                        modelInv.removeRow(i);
+                    }
+                }
                 readFileObject(filePath);
                 for (Inventaire object : listInventaire) {
                     modelInv.addRow(
@@ -230,9 +258,11 @@ public class ViewInv {
                                     object.getDateAchat(),
                                     object.getDescription() });
                 }
+
                 update();
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(frame, "Error");
+                System.out.println(e.getMessage());
             }
         }
     }
@@ -248,6 +278,7 @@ public class ViewInv {
 
             try {
                 writeFileObject(filePath);
+                isSave = true;
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(frame, "Error");
             }
@@ -273,6 +304,7 @@ public class ViewInv {
                 String filePath = fichier.getPath();
                 try {
                     writeFileObject(filePath);
+                    isSave = true;
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(frame, "Error");
                 }
@@ -282,8 +314,35 @@ public class ViewInv {
         }
     }
 
-    private Object miExportAction() {
-        return null;
+    private void miExportAction() {
+        fc.setDialogTitle("Exportation fichier texte");
+
+        FileNameExtensionFilter fileFilter = new FileNameExtensionFilter("*.txt", "txt");
+        fc.setFileFilter(fileFilter);
+
+        fc.addChoosableFileFilter(new FileNameExtensionFilter("*.txt", "txt"));
+
+        if (isInventaireOuvert()) {
+            int rep = fc.showSaveDialog(frame);
+
+            if (rep == JFileChooser.APPROVE_OPTION) {
+                File fichier = fc.getSelectedFile();
+
+                String filePath = fichier.getPath();
+
+                if (!filePath.endsWith("txt")) {
+                    filePath = filePath.concat(".txt");
+
+                    try {
+                        writeFile(filePath);
+                    } catch (Exception e) {
+                        JOptionPane.showMessageDialog(frame, "Error");
+                    }
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(frame, "Aucun inventaire ouvert");
+        }
     }
 
     /*
@@ -298,8 +357,8 @@ public class ViewInv {
         return null;
     }
 
-    private Object btnQuitAction() {
-        return null;
+    private void btnQuitAction() {
+        miQuitAction();
     }
 
     private void btnMoinsEntAction() {
@@ -345,6 +404,7 @@ public class ViewInv {
         sortie.write(listInventaire.size());
         for (Inventaire object : listInventaire) {
             sortie.writeObject(object);
+            sortie.flush();
         }
 
         sortie.close();
@@ -363,6 +423,20 @@ public class ViewInv {
         } catch (FileNotFoundException e) {
             JOptionPane.showMessageDialog(frame, "Could not read file");
         }
+    }
+
+    public void writeFile(String fileName) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, false));
+
+        for (int i = 0; i < listInventaire.size(); i++) {
+            Inventaire item = listInventaire.get(i);
+            writer.write(item.getNom() + ", " + item.getCategorie() + ", " + item.getPrix() + ", " + item.getDateAchat()
+                    + ", " + item.getDescription());
+            writer.newLine();
+            writer.newLine();
+        }
+
+        writer.close();
     }
 
     public static void main(String[] args) throws IOException {
