@@ -437,7 +437,6 @@ public class ViewInv {
         sortie.write(listInventaire.size());
         for (Inventaire object : listInventaire) {
             sortie.writeObject(object);
-            sortie.flush();
         }
 
         sortie.close();
@@ -447,6 +446,7 @@ public class ViewInv {
         try {
             ObjectInputStream entree = new ObjectInputStream(new FileInputStream(fileName));
 
+            listInventaire.clear();
             int nb = entree.read();
             for (int i = 0; i < nb; i++) {
                 listInventaire.add((Inventaire) entree.readObject());
