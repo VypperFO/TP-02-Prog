@@ -14,9 +14,12 @@ import java.util.ArrayList;
 import java.util.regex.PatternSyntaxException;
 
 import javax.swing.*;
+import javax.swing.event.MouseInputAdapter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
+
+import org.w3c.dom.events.MouseEvent;
 
 public class ViewInv {
     JFrame frame;
@@ -101,17 +104,26 @@ public class ViewInv {
         // TABLES
         listInventaire = listInventaire();
 
-        modelInv = new DefaultTableModel(colNamesInv, 0);
-
+        modelInv = new DefaultTableModel(colNamesInv, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
         tabInv = new JTable(modelInv);
-        tabInv.setCellSelectionEnabled(false);
         tabInv.setAutoCreateRowSorter(true);
+        tabInv.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel>(modelInv);
         tabInv.setRowSorter(sorter);
 
-        modelEnt = new DefaultTableModel(colNamesEnt, 0);
+        modelEnt = new DefaultTableModel(colNamesEnt, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
         tabEnt = new JTable(modelEnt);
-        tabEnt.setCellSelectionEnabled(false);
+        tabEnt.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 
         // BUTTONS
         btnFiltre = new JButton("Filtre");
@@ -353,8 +365,14 @@ public class ViewInv {
      * @@@@@@@@@@@@@@
      */
 
-    private Object btnMoinsInvAction() {
-        return null;
+    private void btnMoinsInvAction() {
+        if (isInventaireOuvert()) {
+            int ligneSelectionner = tabInv.getSelectedRow();
+
+            modelInv.removeRow(ligneSelectionner);
+        } else {
+            JOptionPane.showMessageDialog(frame, "Aucun inventaire ouvert");
+        }
     }
 
     private void btnQuitAction() {
@@ -369,7 +387,11 @@ public class ViewInv {
     }
 
     private void btnPlusInvAction() {
-        ViewAjoutInv ajout = new ViewAjoutInv();
+        if (isInventaireOuvert()) {
+            ViewAjoutInv ajout = new ViewAjoutInv();
+        } else {
+            JOptionPane.showMessageDialog(frame, "Aucun inventaire ouvert");
+        }
     }
 
     /*
