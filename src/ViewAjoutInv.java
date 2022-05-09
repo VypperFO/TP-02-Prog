@@ -4,7 +4,7 @@ import java.awt.*;
 import com.toedter.calendar.JDateChooser;
 
 public class ViewAjoutInv {
-    JDialog dialog;
+    static JDialog dialog;
 
     JLabel labNom, labNumSerie, labCategorie, labPrix, labDate, labDescription;
     JTextField txfNom, txfNumSerie, txfPrix;

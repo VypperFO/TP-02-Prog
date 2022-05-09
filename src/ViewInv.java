@@ -15,11 +15,12 @@ import java.util.regex.PatternSyntaxException;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
-import org.w3c.dom.events.MouseEvent;
+import static com.sun.java.accessibility.util.AWTEventMonitor.addKeyListener;
 
 public class ViewInv {
     JFrame frame;
@@ -36,8 +37,8 @@ public class ViewInv {
     Dimension dimTxf = new Dimension(125, 25);
     Dimension dimBtn = new Dimension(125, 25);
 
-    String[] colNamesInv = { "Nom", "Categorie", "Prix", "Date achat", "Description" };
-    String[] colNamesEnt = { "Date", "Description" };
+    String[] colNamesInv = {"Nom", "Categorie", "Prix", "Date achat", "Description"};
+    String[] colNamesEnt = {"Date", "Description"};
 
     public boolean isSave = false;
 
@@ -111,6 +112,15 @@ public class ViewInv {
             }
         };
         tabInv = new JTable(modelInv);
+        tabInv.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent me) {
+                if (me.getClickCount() == 2) {
+                    
+                    new ViewModifInv();
+                }
+            }
+        });
         tabInv.setAutoCreateRowSorter(true);
         tabInv.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel>(modelInv);
@@ -164,6 +174,14 @@ public class ViewInv {
         btnQuit.setPreferredSize(dimBtn);
         btnQuit.addActionListener(e -> btnQuitAction());
 
+        addKeyListener(new KeyAdapter(){
+            public void keyPressed(KeyEvent e) {
+                if (((KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, java.awt.event.InputEvent.ALT_DOWN_MASK)) != null) && e.getKeyCode() == KeyEvent.VK_F4) {
+                    miQuitAction();
+                }
+            }
+        });
+
         // PANEL
         panItemsInv = new JPanel();
         panItemsInv.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -204,9 +222,9 @@ public class ViewInv {
 
     /*
      * @@@@@@@@@@@@@
-     * 
+     *
      * @@@ Menu @@@
-     * 
+     *
      * @@@@@@@@@@@@@@
      */
 
@@ -250,28 +268,24 @@ public class ViewInv {
         FileNameExtensionFilter fileFilter = new FileNameExtensionFilter("*.dat", "dat");
         fc.setFileFilter(fileFilter);
 
-        fc.addChoosableFileFilter(new FileNameExtensionFilter("*.dat", "dat"));
-
         int rep = fc.showOpenDialog(frame);
         if (rep == JFileChooser.APPROVE_OPTION) {
             File fichier = fc.getSelectedFile();
 
             String filePath = fichier.getPath();
             try {
-                if (isInventaireOuvert()) {
-                    for (int i = 0; i < listInventaire.size(); i++) {
-                        modelInv.removeRow(i);
+                if (!isInventaireOuvert()) {
+                    readFileObject(filePath);
+                    for (Inventaire object : listInventaire) {
+                        modelInv.addRow(
+                                new Object[]{object.getNom(), object.getCategorie(), object.getPrix(),
+                                        object.getDateAchat(),
+                                        object.getDescription()});
                     }
-                }
-                readFileObject(filePath);
-                for (Inventaire object : listInventaire) {
-                    modelInv.addRow(
-                            new Object[] { object.getNom(), object.getCategorie(), object.getPrix(),
-                                    object.getDateAchat(),
-                                    object.getDescription() });
+                } else {
+                    JOptionPane.showMessageDialog(frame, "Inventaire déjà ouverte");
                 }
 
-                update();
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(frame, "Error");
                 System.out.println(e.getMessage());
@@ -280,7 +294,8 @@ public class ViewInv {
     }
 
     private void miFermerAction() {
-        listInventaire.clear();
+        modelInv.setRowCount(0);
+        listInventaire.clear(); 
     }
 
     private void miSaveAction() {
@@ -304,8 +319,6 @@ public class ViewInv {
 
         FileNameExtensionFilter fileFilter = new FileNameExtensionFilter("*.dat", "dat");
         fc.setFileFilter(fileFilter);
-
-        fc.addChoosableFileFilter(new FileNameExtensionFilter("*.dat", "dat"));
 
         if (isInventaireOuvert()) {
             int rep = fc.showSaveDialog(frame);
@@ -332,8 +345,6 @@ public class ViewInv {
         FileNameExtensionFilter fileFilter = new FileNameExtensionFilter("*.txt", "txt");
         fc.setFileFilter(fileFilter);
 
-        fc.addChoosableFileFilter(new FileNameExtensionFilter("*.txt", "txt"));
-
         if (isInventaireOuvert()) {
             int rep = fc.showSaveDialog(frame);
 
@@ -359,9 +370,9 @@ public class ViewInv {
 
     /*
      * @@@@@@@@@@@@@@
-     * 
+     *
      * @@@ Button @@@
-     * 
+     *
      * @@@@@@@@@@@@@@
      */
 
@@ -396,9 +407,9 @@ public class ViewInv {
 
     /*
      * @@@@@@@@@@@@@@@@
-     * 
+     *
      * @@@ Methodes @@@
-     * 
+     *
      * @@@@@@@@@@@@@@@@
      */
 
