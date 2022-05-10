@@ -66,6 +66,8 @@ public class ViewAjoutInv {
         // BOUTON
         btnAjout = new JButton("Ajouter");
         btnAjout.setPreferredSize(dimBtn);
+        btnAjout.addActionListener(e -> btnAjoutAction());
+
         btnCancel = new JButton("Annuler");
         btnCancel.setPreferredSize(dimBtn);
         btnCancel.addActionListener(e -> btnCancelAction());
@@ -94,6 +96,19 @@ public class ViewAjoutInv {
         dialog.add(panCenter, BorderLayout.CENTER);
         dialog.add(panBtn, BorderLayout.SOUTH);
         dialog.setVisible(true);
+    }
+
+    private void btnAjoutAction() {
+        String nom = txfNom.getText();
+        String description = txaDescription.getText();
+        String categorie = cmbCategorie.getSelectedItem().toString();
+        int noSerie = Integer.parseInt(txfNumSerie.getText());
+        int prix = Integer.parseInt(txfPrix.getText());
+
+        Inventaire item = new Inventaire(nom, description, categorie, prix, noSerie);
+        ViewInv.listInventaire.add(item);
+
+        dialog.dispose();
     }
 
     private void btnCancelAction() {

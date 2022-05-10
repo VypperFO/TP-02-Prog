@@ -24,7 +24,8 @@ import static com.sun.java.accessibility.util.AWTEventMonitor.addKeyListener;
 
 public class ViewInv {
     JFrame frame;
-    JTable tabInv, tabEnt;
+    static JTable tabInv;
+    JTable tabEnt;
     DefaultTableModel modelInv, modelEnt;
     JButton btnFiltre, btnPlusInv, btnMoinsInv, btnPlusEnt, btnMoinsEnt, btnQuit;
     JTextField txfRecherche;
@@ -37,12 +38,13 @@ public class ViewInv {
     Dimension dimTxf = new Dimension(125, 25);
     Dimension dimBtn = new Dimension(125, 25);
 
-    String[] colNamesInv = {"Nom", "Categorie", "Prix", "Date achat", "Description"};
-    String[] colNamesEnt = {"Date", "Description"};
+    String[] colNamesInv = { "Nom", "Categorie", "Prix", "Date achat", "Description" };
+    String[] colNamesEnt = { "Date", "Description" };
 
     public boolean isSave = false;
+    public boolean isNouveau = false;
 
-    static ArrayList<Inventaire> listInventaire;
+    public static ArrayList<Inventaire> listInventaire;
 
     public ViewInv() throws IOException {
         frame = new JFrame("salope de tp");
@@ -116,7 +118,7 @@ public class ViewInv {
             @Override
             public void mouseClicked(MouseEvent me) {
                 if (me.getClickCount() == 2) {
-                    
+
                     new ViewModifInv();
                 }
             }
@@ -174,9 +176,10 @@ public class ViewInv {
         btnQuit.setPreferredSize(dimBtn);
         btnQuit.addActionListener(e -> btnQuitAction());
 
-        addKeyListener(new KeyAdapter(){
+        addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent e) {
-                if (((KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, java.awt.event.InputEvent.ALT_DOWN_MASK)) != null) && e.getKeyCode() == KeyEvent.VK_F4) {
+                if (((KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, java.awt.event.InputEvent.ALT_DOWN_MASK)) != null)
+                        && e.getKeyCode() == KeyEvent.VK_F4) {
                     miQuitAction();
                 }
             }
@@ -245,7 +248,7 @@ public class ViewInv {
 
                 if (reponseSave == JOptionPane.YES_OPTION) {
                     try {
-                        miSaveToAction();
+                        miSaveAction();
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
                     }
@@ -260,6 +263,7 @@ public class ViewInv {
     private void miNouveauAction() {
         fc.setDialogTitle("Nouveau inventaire...");
         int rep = fc.showSaveDialog(frame);
+        isNouveau = true;
     }
 
     private void miOuvrirAction() {
@@ -278,9 +282,9 @@ public class ViewInv {
                     readFileObject(filePath);
                     for (Inventaire object : listInventaire) {
                         modelInv.addRow(
-                                new Object[]{object.getNom(), object.getCategorie(), object.getPrix(),
+                                new Object[] { object.getNom(), object.getCategorie(), object.getPrix(),
                                         object.getDateAchat(),
-                                        object.getDescription()});
+                                        object.getDescription() });
                     }
                 } else {
                     JOptionPane.showMessageDialog(frame, "Inventaire déjà ouverte");
@@ -295,7 +299,9 @@ public class ViewInv {
 
     private void miFermerAction() {
         modelInv.setRowCount(0);
-        listInventaire.clear(); 
+        listInventaire.clear();
+        isNouveau = false;
+        isSave = false;
     }
 
     private void miSaveAction() {
@@ -380,7 +386,8 @@ public class ViewInv {
         if (isInventaireOuvert()) {
             int ligneSelectionner = tabInv.getSelectedRow();
 
-            modelInv.removeRow(ligneSelectionner);
+            listInventaire.remove(ligneSelectionner);
+            update();
         } else {
             JOptionPane.showMessageDialog(frame, "Aucun inventaire ouvert");
         }
@@ -398,8 +405,9 @@ public class ViewInv {
     }
 
     private void btnPlusInvAction() {
-        if (isInventaireOuvert()) {
+        if (isInventaireOuvert() || isNouveau) {
             ViewAjoutInv ajout = new ViewAjoutInv();
+            update();
         } else {
             JOptionPane.showMessageDialog(frame, "Aucun inventaire ouvert");
         }
@@ -428,7 +436,14 @@ public class ViewInv {
     }
 
     public void update() {
+        modelInv.setRowCount(0);
 
+        for (Inventaire object : listInventaire) {
+            modelInv.addRow(
+                    new Object[] { object.getNom(), object.getCategorie(), object.getPrix(),
+                            object.getDateAchat(),
+                            object.getDescription() });
+        }
     }
 
     public void writeFileObject(String fileName) throws IOException {
