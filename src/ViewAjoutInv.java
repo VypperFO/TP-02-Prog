@@ -1,5 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
 import com.toedter.calendar.JDateChooser;
 
@@ -104,8 +107,10 @@ public class ViewAjoutInv {
         String categorie = cmbCategorie.getSelectedItem().toString();
         int noSerie = Integer.parseInt(txfNumSerie.getText());
         int prix = Integer.parseInt(txfPrix.getText());
+        Date dateRaw = dateChooser.getDate();
+        LocalDate date = dateRaw.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
-        Inventaire item = new Inventaire(nom, description, categorie, prix, noSerie);
+        Inventaire item = new Inventaire(nom, description, categorie, prix, noSerie, date);
         ViewInv.listInventaire.add(item);
 
         dialog.dispose();

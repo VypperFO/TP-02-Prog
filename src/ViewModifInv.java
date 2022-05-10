@@ -1,5 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
 import com.toedter.calendar.JDateChooser;
 
@@ -18,8 +21,8 @@ public class ViewModifInv {
     Dimension dimTf = new Dimension(250, 25);
     Dimension dimLab = new Dimension(100, 25);
     Dimension dimBtn = new Dimension(100, 25);
-
-    public int selectedRow = ViewInv.tabInv.getSelectedRow();
+    
+    private int selectedRow = ViewInv.tabInv.getSelectedRow();
 
     public ViewModifInv() {
         // DIALOG
@@ -64,7 +67,10 @@ public class ViewModifInv {
         cmbCategorie.setPreferredSize(dimTf);
 
         // DATE CHOOSER
-        dateChooser = new JDateChooser();
+        LocalDate dateRaw = ViewInv.listInventaire.get(selectedRow).getDateAchat();
+        Date date = Date.from(dateRaw.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+        dateChooser = new JDateChooser(date);
         dateChooser.setPreferredSize(dimTf);
 
         // TEXTAREA

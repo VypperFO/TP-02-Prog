@@ -8,13 +8,13 @@ public class Inventaire implements Serializable {
     private LocalDate dateAchat;
     private LinkedHashMap<LocalDate, String> entretien;
 
-    public Inventaire(String nom, String description, String categorie, int prix, int numSerie) {
+    public Inventaire(String nom, String description, String categorie, int prix, int numSerie, LocalDate dateAchat) {
         this.nom = nom;
         this.description = description;
         this.categorie = categorie;
         this.prix = prix;
         this.numSerie = numSerie;
-        // this.dateAchat = dateAchat;
+        this.dateAchat = dateAchat;
     }
 
     public Inventaire(String nom, int prix) {
