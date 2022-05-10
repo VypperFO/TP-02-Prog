@@ -9,12 +9,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.regex.PatternSyntaxException;
 
 import javax.swing.*;
-import javax.swing.event.MouseInputAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
@@ -264,7 +262,7 @@ public class ViewInv {
 
     private void miNouveauAction() {
         fc.setDialogTitle("Nouveau inventaire...");
-        int rep = fc.showSaveDialog(frame);
+        fc.showSaveDialog(frame);
         isNouveau = true;
     }
 
@@ -403,12 +401,12 @@ public class ViewInv {
     }
 
     private void btnPlusEntAction() {
-        ViewAjoutEnt ajout = new ViewAjoutEnt();
+        new ViewAjoutEnt();
     }
 
     private void btnPlusInvAction() {
         if (isInventaireOuvert() || isNouveau) {
-            ViewAjoutInv ajout = new ViewAjoutInv();
+            new ViewAjoutInv();
             update();
         } else {
             JOptionPane.showMessageDialog(frame, "Aucun inventaire ouvert");
