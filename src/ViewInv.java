@@ -43,11 +43,12 @@ public class ViewInv {
 
     public boolean isSave = false;
     public boolean isNouveau = false;
+    public String title = "";
 
     public static ArrayList<Inventaire> listInventaire;
 
     public ViewInv() throws IOException {
-        frame = new JFrame("salope de tp");
+        frame = new JFrame(title + "Félix-Olivier 2173242");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(1000, 800);
         frame.setLocationRelativeTo(null);

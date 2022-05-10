@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.lang.constant.DirectMethodHandleDesc;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -121,10 +122,14 @@ public class ViewModifInv {
         int prix = Integer.parseInt(txfPrix.getText());
         Date dateRaw = dateChooser.getDate();
         LocalDate date = dateRaw.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-
-        Inventaire item = new Inventaire(nom, description, categorie, prix, noSerie, date);
-        ViewInv.listInventaire.remove(selectedRow);
-        ViewInv.listInventaire.add(selectedRow, item);
+        
+        Inventaire item = ViewInv.listInventaire.get(selectedRow);
+        item.setNom(nom);
+        item.setDescription(description);
+        item.setCategorie(categorie);
+        item.setNumSerie(noSerie);
+        item.setPrix(prix);
+        item.setDateAchat(date);
 
         dialog.dispose();
     }
