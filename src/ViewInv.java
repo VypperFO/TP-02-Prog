@@ -120,6 +120,7 @@ public class ViewInv {
                 if (me.getClickCount() == 2) {
 
                     new ViewModifInv();
+                    update();
                 }
             }
         });

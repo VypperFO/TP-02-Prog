@@ -21,7 +21,7 @@ public class ViewModifInv {
     Dimension dimTf = new Dimension(250, 25);
     Dimension dimLab = new Dimension(100, 25);
     Dimension dimBtn = new Dimension(100, 25);
-    
+
     private int selectedRow = ViewInv.tabInv.getSelectedRow();
 
     public ViewModifInv() {
@@ -81,6 +81,8 @@ public class ViewModifInv {
         // BOUTONS
         btnModif = new JButton("Modifier");
         btnModif.setPreferredSize(dimBtn);
+        btnModif.addActionListener(e -> btnModifAction());
+
         btnCancel = new JButton("Annuler");
         btnCancel.setPreferredSize(dimBtn);
         btnCancel.addActionListener(e -> btnCancelAction());
@@ -109,6 +111,22 @@ public class ViewModifInv {
         dialog.add(panCenter, BorderLayout.CENTER);
         dialog.add(panBtn, BorderLayout.SOUTH);
         dialog.setVisible(true);
+    }
+
+    private void btnModifAction() {
+        String nom = txfNom.getText();
+        String description = txaDescription.getText();
+        String categorie = cmbCategorie.getSelectedItem().toString();
+        int noSerie = Integer.parseInt(txfNumSerie.getText());
+        int prix = Integer.parseInt(txfPrix.getText());
+        Date dateRaw = dateChooser.getDate();
+        LocalDate date = dateRaw.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        Inventaire item = new Inventaire(nom, description, categorie, prix, noSerie, date);
+        ViewInv.listInventaire.remove(selectedRow);
+        ViewInv.listInventaire.add(selectedRow, item);
+
+        dialog.dispose();
     }
 
     private void btnCancelAction() {
