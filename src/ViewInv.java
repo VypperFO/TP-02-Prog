@@ -51,6 +51,7 @@ public class ViewInv {
         frame.setSize(1000, 800);
         frame.setLocationRelativeTo(null);
         frame.setLayout(new BorderLayout(10, 10));
+        frame.setResizable(false);
 
         // MENU TP-2
         menuTP2 = new JMenu("TP-2");
@@ -264,6 +265,10 @@ public class ViewInv {
         fc.setDialogTitle("Nouveau inventaire...");
         fc.showSaveDialog(frame);
         isNouveau = true;
+
+        File fichier = fc.getSelectedFile();
+        String filePath = fichier.getPath();
+        title = filePath;
     }
 
     private void miOuvrirAction() {
@@ -289,6 +294,9 @@ public class ViewInv {
                 } else {
                     JOptionPane.showMessageDialog(frame, "Inventaire déjà ouverte");
                 }
+
+                title = filePath;
+                update();
 
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(frame, "Error");
