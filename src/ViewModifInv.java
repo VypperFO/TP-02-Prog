@@ -114,23 +114,28 @@ public class ViewModifInv {
     }
 
     private void btnModifAction() {
-        String nom = txfNom.getText();
-        String description = txaDescription.getText();
-        String categorie = cmbCategorie.getSelectedItem().toString();
-        int noSerie = Integer.parseInt(txfNumSerie.getText());
-        int prix = Integer.parseInt(txfPrix.getText());
-        Date dateRaw = dateChooser.getDate();
-        LocalDate date = dateRaw.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        
-        Inventaire item = ViewInv.listInventaire.get(selectedRow);
-        item.setNom(nom);
-        item.setDescription(description);
-        item.setCategorie(categorie);
-        item.setNumSerie(noSerie);
-        item.setPrix(prix);
-        item.setDateAchat(date);
+        try {
+            String nom = txfNom.getText();
+            String description = txaDescription.getText();
+            String categorie = cmbCategorie.getSelectedItem().toString();
+            int noSerie = Integer.parseInt(txfNumSerie.getText());
+            double prix = Double.parseDouble(txfPrix.getText());
+            Date dateRaw = dateChooser.getDate();
+            LocalDate date = dateRaw.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    
+            Inventaire item = ViewInv.listInventaire.get(selectedRow);
+    
+            item.setNom(nom);
+            item.setDescription(description);
+            item.setCategorie(categorie);
+            item.setNumSerie(noSerie);
+            item.setPrix(prix);
+            item.setDateAchat(date);
 
-        dialog.dispose();
+            dialog.dispose();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(dialog, "Erreur de donnée");
+        }
     }
 
     private void btnCancelAction() {

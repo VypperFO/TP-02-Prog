@@ -107,17 +107,18 @@ public class ViewAjoutInv {
             String description = txaDescription.getText();
             String categorie = cmbCategorie.getSelectedItem().toString();
             int noSerie = Integer.parseInt(txfNumSerie.getText());
-            int prix = Integer.parseInt(txfPrix.getText());
+            double prix = Double.parseDouble(txfPrix.getText());
             Date dateRaw = dateChooser.getDate();
             LocalDate date = dateRaw.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-    
+
             Inventaire item = new Inventaire(nom, description, categorie, prix, noSerie, date);
             ViewInv.listInventaire.add(item);
+
+            dialog.dispose();
         } catch (Exception e) {
-            //TODO: handle exception
+            JOptionPane.showMessageDialog(dialog, "Erreur de donnée");
         }
 
-        dialog.dispose();
     }
 
     private void btnCancelAction() {

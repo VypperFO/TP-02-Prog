@@ -4,11 +4,12 @@ import java.util.LinkedHashMap;
 
 public class Inventaire implements Serializable {
     private String nom, description, categorie;
-    private int prix, numSerie;
+    private int numSerie;
+    private double prix;
     private LocalDate dateAchat;
     private LinkedHashMap<LocalDate, String> entretien;
 
-    public Inventaire(String nom, String description, String categorie, int prix, int numSerie, LocalDate dateAchat) {
+    public Inventaire(String nom, String description, String categorie, double prix, int numSerie, LocalDate dateAchat) {
         this.nom = nom;
         this.description = description;
         this.categorie = categorie;
@@ -46,11 +47,11 @@ public class Inventaire implements Serializable {
         this.categorie = categorie;
     }
 
-    public int getPrix() {
+    public double getPrix() {
         return prix;
     }
 
-    public void setPrix(int prix) {
+    public void setPrix(double prix) {
         this.prix = prix;
     }
 
