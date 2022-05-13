@@ -267,8 +267,7 @@ public class ViewInv {
         isNouveau = true;
 
         File fichier = fc.getSelectedFile();
-        String filePath = fichier.getPath();
-        title = filePath;
+        update();
     }
 
     private void miOuvrirAction() {
@@ -306,10 +305,17 @@ public class ViewInv {
     }
 
     private void miFermerAction() {
-        modelInv.setRowCount(0);
-        listInventaire.clear();
-        isNouveau = false;
-        isSave = false;
+        if (isInventaireOuvert()) {
+            modelInv.setRowCount(0);
+            listInventaire.clear();
+            isNouveau = false;
+            isSave = false;
+
+            update();
+            frame.setTitle("Félix-Olivier 2173242");
+        } else {
+            JOptionPane.showMessageDialog(frame, "Aucune inventaire ouverte");
+        }
     }
 
     private void miSaveAction() {
@@ -415,6 +421,7 @@ public class ViewInv {
     private void btnPlusInvAction() {
         if (isInventaireOuvert() || isNouveau) {
             new ViewAjoutInv();
+
             update();
         } else {
             JOptionPane.showMessageDialog(frame, "Aucun inventaire ouvert");
@@ -452,6 +459,11 @@ public class ViewInv {
                             object.getDateAchat(),
                             object.getDescription() });
         }
+
+        File file = fc.getSelectedFile();
+        title = file.getName();
+
+        frame.setTitle(title + " Félix-Olivier 2173242");
     }
 
     public void writeFileObject(String fileName) throws IOException {
