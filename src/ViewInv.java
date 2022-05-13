@@ -53,6 +53,8 @@ public class ViewInv {
         frame.setLocationRelativeTo(null);
         frame.setLayout(new BorderLayout(10, 10));
         frame.setResizable(false);
+
+        // QUIT
         frame.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
@@ -140,7 +142,7 @@ public class ViewInv {
             }
         });
         tabInv.setAutoCreateRowSorter(true);
-        tabInv.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        tabInv.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel>(modelInv);
         tabInv.setRowSorter(sorter);
 
@@ -431,7 +433,7 @@ public class ViewInv {
             new ViewAjoutInv();
 
             update();
-            tabInv.setRowSelectionInterval(modelInv.getRowCount(), 0);
+            tabInv.setRowSelectionInterval(listInventaire.size() - 1, listInventaire.size() - 1);
         } else {
             JOptionPane.showMessageDialog(frame, "Aucun inventaire ouvert");
         }
