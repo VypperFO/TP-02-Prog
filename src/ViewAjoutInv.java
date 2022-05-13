@@ -102,16 +102,20 @@ public class ViewAjoutInv {
     }
 
     private void btnAjoutAction() {
-        String nom = txfNom.getText();
-        String description = txaDescription.getText();
-        String categorie = cmbCategorie.getSelectedItem().toString();
-        int noSerie = Integer.parseInt(txfNumSerie.getText());
-        int prix = Integer.parseInt(txfPrix.getText());
-        Date dateRaw = dateChooser.getDate();
-        LocalDate date = dateRaw.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-
-        Inventaire item = new Inventaire(nom, description, categorie, prix, noSerie, date);
-        ViewInv.listInventaire.add(item);
+        try {
+            String nom = txfNom.getText();
+            String description = txaDescription.getText();
+            String categorie = cmbCategorie.getSelectedItem().toString();
+            int noSerie = Integer.parseInt(txfNumSerie.getText());
+            int prix = Integer.parseInt(txfPrix.getText());
+            Date dateRaw = dateChooser.getDate();
+            LocalDate date = dateRaw.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    
+            Inventaire item = new Inventaire(nom, description, categorie, prix, noSerie, date);
+            ViewInv.listInventaire.add(item);
+        } catch (Exception e) {
+            //TODO: handle exception
+        }
 
         dialog.dispose();
     }

@@ -42,6 +42,7 @@ public class ViewInv {
     public boolean isSave = false;
     public boolean isNouveau = false;
     public String title = "";
+    public String filePath = "";
 
     public static ArrayList<Inventaire> listInventaire;
 
@@ -52,6 +53,20 @@ public class ViewInv {
         frame.setLocationRelativeTo(null);
         frame.setLayout(new BorderLayout(10, 10));
         frame.setResizable(false);
+        frame.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                miQuitAction();
+            }
+        });
+        addKeyListener(new KeyAdapter() {
+            public void keyPressed(KeyEvent e) {
+                if (((KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, java.awt.event.InputEvent.ALT_DOWN_MASK)) != null)
+                        && e.getKeyCode() == KeyEvent.VK_F4) {
+                    miQuitAction();
+                }
+            }
+        });
 
         // MENU TP-2
         menuTP2 = new JMenu("TP-2");
@@ -177,15 +192,6 @@ public class ViewInv {
         btnQuit.setPreferredSize(dimBtn);
         btnQuit.addActionListener(e -> btnQuitAction());
 
-        addKeyListener(new KeyAdapter() {
-            public void keyPressed(KeyEvent e) {
-                if (((KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, java.awt.event.InputEvent.ALT_DOWN_MASK)) != null)
-                        && e.getKeyCode() == KeyEvent.VK_F4) {
-                    miQuitAction();
-                }
-            }
-        });
-
         // PANEL
         panItemsInv = new JPanel();
         panItemsInv.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -267,6 +273,7 @@ public class ViewInv {
         isNouveau = true;
 
         File fichier = fc.getSelectedFile();
+        filePath = fichier.getPath();
         update();
     }
 
@@ -311,8 +318,8 @@ public class ViewInv {
             isNouveau = false;
             isSave = false;
 
-            update();
             frame.setTitle("Félix-Olivier 2173242");
+            filePath = "";
         } else {
             JOptionPane.showMessageDialog(frame, "Aucune inventaire ouverte");
         }
@@ -321,13 +328,14 @@ public class ViewInv {
     private void miSaveAction() {
         if (isInventaireOuvert()) {
             File fichier = fc.getSelectedFile();
-            String filePath = fichier.getPath();
 
+            String filePath = fichier.getPath();
             try {
                 writeFileObject(filePath);
                 isSave = true;
             } catch (IOException e) {
-                JOptionPane.showMessageDialog(frame, "Error");
+                JOptionPane.showMessageDialog(frame, "Erreur");
+                System.out.println(e.getMessage());
             }
         } else {
             JOptionPane.showMessageDialog(frame, "Aucun inventaire ouvert");
@@ -423,6 +431,7 @@ public class ViewInv {
             new ViewAjoutInv();
 
             update();
+            tabInv.setRowSelectionInterval(modelInv.getRowCount(), 0);
         } else {
             JOptionPane.showMessageDialog(frame, "Aucun inventaire ouvert");
         }
