@@ -53,6 +53,9 @@ public class ViewModifInv {
         String noSerie = String.valueOf(ViewInv.listInventaire.get(selectedRow).getNumSerie());
         String prix = String.valueOf(ViewInv.listInventaire.get(selectedRow).getPrix());
 
+        if (noSerie.equals("null"))
+            noSerie = "";
+
         txfNom = new JTextField(nom);
         txfNom.setPreferredSize(dimTf);
         txfNumSerie = new JTextField(noSerie);
@@ -114,27 +117,49 @@ public class ViewModifInv {
     }
 
     private void btnModifAction() {
-        try {
-            String nom = txfNom.getText();
-            String description = txaDescription.getText();
-            String categorie = cmbCategorie.getSelectedItem().toString();
-            int noSerie = Integer.parseInt(txfNumSerie.getText());
-            double prix = Double.parseDouble(txfPrix.getText());
-            Date dateRaw = dateChooser.getDate();
-            LocalDate date = dateRaw.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-    
-            Inventaire item = ViewInv.listInventaire.get(selectedRow);
-    
-            item.setNom(nom);
-            item.setDescription(description);
-            item.setCategorie(categorie);
-            item.setNumSerie(noSerie);
-            item.setPrix(prix);
-            item.setDateAchat(date);
+        if (isValide()) {
+            try {
+                String nom = txfNom.getText();
+                String description = txaDescription.getText();
+                String categorie = cmbCategorie.getSelectedItem().toString();
+                Integer noSerie = Integer.parseInt(txfNumSerie.getText());
+                double prix = Double.parseDouble(txfPrix.getText());
+                Date dateRaw = dateChooser.getDate();
+                LocalDate date = dateRaw.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
-            dialog.dispose();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(dialog, "Erreur de donnée");
+                if (txfNumSerie.getText().equals("")) {
+                    noSerie = null;
+                } else {
+                    noSerie = Integer.parseInt(txfNumSerie.getText());
+                }
+
+                Inventaire item = ViewInv.listInventaire.get(selectedRow);
+
+                item.setNom(nom);
+                item.setDescription(description);
+                item.setCategorie(categorie);
+                item.setNumSerie(noSerie);
+                item.setPrix(prix);
+                item.setDateAchat(date);
+
+                dialog.dispose();
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(dialog, "Erreur de donnée");
+            }
+        } else {
+            JOptionPane.showMessageDialog(dialog, "Donnée(s) manquante(s)");
+        }
+    }
+
+    private boolean isValide() {
+        String nom = txfNom.getText();
+        String prix = txfPrix.getText();
+        Date date = dateChooser.getDate();
+
+        if (!(nom.equals("") || prix.equals("") || date.equals(""))) {
+            return true;
+        } else {
+            return false;
         }
     }
 

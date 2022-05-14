@@ -47,11 +47,11 @@ public class ViewAjoutInv {
         labDescription.setPreferredSize(dimLab);
 
         // TEXTFIELD
-        txfNom = new JTextField();
+        txfNom = new JTextField("");
         txfNom.setPreferredSize(dimTf);
-        txfNumSerie = new JTextField();
+        txfNumSerie = new JTextField("");
         txfNumSerie.setPreferredSize(dimTf);
-        txfPrix = new JTextField();
+        txfPrix = new JTextField("");
         txfPrix.setPreferredSize(dimTf);
 
         // COMBO BOX
@@ -63,7 +63,7 @@ public class ViewAjoutInv {
         dateChooser.setPreferredSize(dimTf);
 
         // TEXTAREA
-        txaDescription = new JTextArea();
+        txaDescription = new JTextArea("");
         txaDescription.setPreferredSize(new Dimension(250, 250));
 
         // BOUTON
@@ -102,27 +102,48 @@ public class ViewAjoutInv {
     }
 
     private void btnAjoutAction() {
-        try {
-            String nom = txfNom.getText();
-            String description = txaDescription.getText();
-            String categorie = cmbCategorie.getSelectedItem().toString();
-            int noSerie = Integer.parseInt(txfNumSerie.getText());
-            double prix = Double.parseDouble(txfPrix.getText());
-            Date dateRaw = dateChooser.getDate();
-            LocalDate date = dateRaw.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        if (isValide()) {
+            try {
+                double prix = Double.parseDouble(txfPrix.getText());
+                Integer noSerie = 0;
+                String nom = txfNom.getText();
+                String description = txaDescription.getText();
+                String categorie = cmbCategorie.getSelectedItem().toString();
+                Date dateRaw = dateChooser.getDate();
+                LocalDate date = dateRaw.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
-            Inventaire item = new Inventaire(nom, description, categorie, prix, noSerie, date);
-            ViewInv.listInventaire.add(item);
+                if (txfNumSerie.getText().equals("")) {
+                    noSerie = null;
+                } else {
+                    noSerie = Integer.parseInt(txfNumSerie.getText());
+                }
 
-            dialog.dispose();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(dialog, "Erreur de donnée");
+                Inventaire item = new Inventaire(nom, description, categorie, prix, noSerie, date);
+                ViewInv.listInventaire.add(item);
+
+                dialog.dispose();
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(dialog, "Erreur de donnée");
+            }
+        } else {
+            JOptionPane.showMessageDialog(dialog, "Donnée(s) manquante(s)");
         }
-
     }
 
     private void btnCancelAction() {
         dialog.dispose();
+    }
+
+    private boolean isValide() {
+        String nom = txfNom.getText();
+        String prix = txfPrix.getText();
+        Date date = dateChooser.getDate();
+
+        if (!(nom.equals("") || prix.equals("") || date.equals(""))) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public static void main(String[] args) {
