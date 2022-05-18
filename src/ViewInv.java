@@ -10,9 +10,13 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.regex.PatternSyntaxException;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
 import java.awt.event.MouseEvent;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
@@ -145,6 +149,29 @@ public class ViewInv {
         tabInv.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel>(modelInv);
         tabInv.setRowSorter(sorter);
+        tabInv.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (e.getValueIsAdjusting()) {
+                    System.out.println("salope");
+                }
+            }
+        });
+        tabInv.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_DOWN)
+                    System.out.println("salope");
+            }
+        });
 
         modelEnt = new DefaultTableModel(colNamesEnt, 0) {
             @Override
@@ -475,6 +502,15 @@ public class ViewInv {
         title = file.getName();
 
         frame.setTitle(title + " Félix-Olivier 2173242");
+    }
+
+    public void updateEntretien() {
+        LinkedHashMap entretiens = listInventaire.get(tabInv.getSelectedRow()).getEntretien();
+        String description = entretiens.get(0);
+
+        modelInv.setRowCount(0);
+
+        modelEnt.addRow();
     }
 
     public void writeFileObject(String fileName) throws IOException {

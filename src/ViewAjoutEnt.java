@@ -1,5 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
 import com.toedter.calendar.JDateChooser;
 
@@ -40,6 +43,7 @@ public class ViewAjoutEnt {
         // BOUTONS
         btnAjout = new JButton("Ajouter");
         btnAjout.setPreferredSize(dimBtn);
+        btnAjout.addActionListener(e -> btnAjoutAction());
         btnCancel = new JButton("Annuler");
         btnCancel.setPreferredSize(dimBtn);
         btnCancel.addActionListener(e -> btnCancelAction());
@@ -60,6 +64,17 @@ public class ViewAjoutEnt {
         dialog.add(panCenter, BorderLayout.CENTER);
         dialog.add(panBtn, BorderLayout.SOUTH);
         dialog.setVisible(true);
+    }
+
+    private void btnAjoutAction() {
+        int selectedRow = ViewInv.tabInv.getSelectedRow();
+        String description = txaDescription.getText();
+        Date dateRaw = dateChooser.getDate();
+        LocalDate date = dateRaw.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        ViewInv.listInventaire.get(selectedRow).addEntretien(date, description);
+        System.out.println(ViewInv.listInventaire.get(selectedRow).getEntretien());
+        dialog.dispose();
     }
 
     private void btnCancelAction() {

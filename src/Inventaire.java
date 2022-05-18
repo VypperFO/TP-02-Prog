@@ -10,13 +10,14 @@ public class Inventaire implements Serializable {
     private LinkedHashMap<LocalDate, String> entretien;
 
     public Inventaire(String nom, String description, String categorie, double prix, Integer numSerie,
-            LocalDate dateAchat) {
+            LocalDate dateAchat, LinkedHashMap entretien) {
         this.nom = nom;
         this.description = description;
         this.categorie = categorie;
         this.prix = prix;
         this.numSerie = numSerie;
         this.dateAchat = dateAchat;
+        this.entretien = entretien;
     }
 
     public String getNom() {
@@ -73,5 +74,9 @@ public class Inventaire implements Serializable {
 
     public void setEntretien(LinkedHashMap<LocalDate, String> entretien) {
         this.entretien = entretien;
+    }
+
+    public void addEntretien(LocalDate date, String description) {
+        this.entretien.put(date, description);
     }
 }

@@ -3,6 +3,7 @@ import java.awt.*;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.LinkedHashMap;
 
 import com.toedter.calendar.JDateChooser;
 
@@ -111,6 +112,7 @@ public class ViewAjoutInv {
                 String categorie = cmbCategorie.getSelectedItem().toString();
                 Date dateRaw = dateChooser.getDate();
                 LocalDate date = dateRaw.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                LinkedHashMap<LocalDate, String> entretien = new LinkedHashMap<>();
 
                 if (txfNumSerie.getText().equals("")) {
                     noSerie = null;
@@ -118,7 +120,7 @@ public class ViewAjoutInv {
                     noSerie = Integer.parseInt(txfNumSerie.getText());
                 }
 
-                Inventaire item = new Inventaire(nom, description, categorie, prix, noSerie, date);
+                Inventaire item = new Inventaire(nom, description, categorie, prix, noSerie, date, entretien);
                 ViewInv.listInventaire.add(item);
 
                 dialog.dispose();
