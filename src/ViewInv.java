@@ -154,6 +154,7 @@ public class ViewInv {
             public void valueChanged(ListSelectionEvent e) {
                 if (e.getValueIsAdjusting()) {
                     System.out.println("salope");
+                    updateEntretien();
                 }
             }
         });
@@ -170,6 +171,7 @@ public class ViewInv {
             public void keyReleased(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_DOWN)
                     System.out.println("salope");
+                updateEntretien();
             }
         });
 
@@ -505,10 +507,12 @@ public class ViewInv {
     }
 
     public void updateEntretien() {
+        modelEnt.setRowCount(0);
         LinkedHashMap entretiens = listInventaire.get(tabInv.getSelectedRow()).getEntretien();
 
-        modelInv.setRowCount(0);
-
+        for (int i = 0; i < entretiens.size(); i++) {
+            System.out.println(entretiens.toString());
+        }
     }
 
     public void writeFileObject(String fileName) throws IOException {
