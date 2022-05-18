@@ -506,11 +506,9 @@ public class ViewInv {
 
     public void updateEntretien() {
         LinkedHashMap entretiens = listInventaire.get(tabInv.getSelectedRow()).getEntretien();
-        String description = entretiens.get(0);
 
         modelInv.setRowCount(0);
 
-        modelEnt.addRow();
     }
 
     public void writeFileObject(String fileName) throws IOException {

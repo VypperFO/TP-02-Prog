@@ -103,32 +103,36 @@ public class ViewAjoutInv {
     }
 
     private void btnAjoutAction() {
-        if (isValide()) {
-            try {
-                double prix = Double.parseDouble(txfPrix.getText());
-                Integer noSerie = 0;
-                String nom = txfNom.getText();
-                String description = txaDescription.getText();
-                String categorie = cmbCategorie.getSelectedItem().toString();
-                Date dateRaw = dateChooser.getDate();
-                LocalDate date = dateRaw.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                LinkedHashMap<LocalDate, String> entretien = new LinkedHashMap<>();
+        try {
+            if (isValide()) {
+                try {
+                    double prix = Double.parseDouble(txfPrix.getText());
+                    Integer noSerie = 0;
+                    String nom = txfNom.getText();
+                    String description = txaDescription.getText();
+                    String categorie = cmbCategorie.getSelectedItem().toString();
+                    Date dateRaw = dateChooser.getDate();
+                    LocalDate date = dateRaw.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    LinkedHashMap<LocalDate, String> entretien = new LinkedHashMap<>();
 
-                if (txfNumSerie.getText().equals("")) {
-                    noSerie = null;
-                } else {
-                    noSerie = Integer.parseInt(txfNumSerie.getText());
+                    if (txfNumSerie.getText().equals("")) {
+                        noSerie = null;
+                    } else {
+                        noSerie = Integer.parseInt(txfNumSerie.getText());
+                    }
+
+                    Inventaire item = new Inventaire(nom, description, categorie, prix, noSerie, date, entretien);
+                    ViewInv.listInventaire.add(item);
+
+                    dialog.dispose();
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(dialog, "Erreur de donnée");
                 }
-
-                Inventaire item = new Inventaire(nom, description, categorie, prix, noSerie, date, entretien);
-                ViewInv.listInventaire.add(item);
-
-                dialog.dispose();
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(dialog, "Erreur de donnée");
+            } else {
+                JOptionPane.showMessageDialog(dialog, "Donnée(s) manquante(s)");
             }
-        } else {
-            JOptionPane.showMessageDialog(dialog, "Donnée(s) manquante(s)");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(dialog, "Error");
         }
     }
 
