@@ -137,18 +137,18 @@ public class ViewModifInv {
                     Date dateRaw = dateChooser.getDate(); // Date complète objet
                     LocalDate date = dateRaw.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(); // Date raffinée et au bon format
 
-                    if (txfNumSerie.getText().equals("")) {
-                        noSerie = null;
-                    } else {
-                        noSerie = Integer.parseInt(txfNumSerie.getText());
-                    }
-
                     Inventaire item = ViewInv.listInventaire.get(selectedRow);
 
                     item.setNom(nom);
-                    item.setDescription(description);
+
+                    if(!(description.equals("null")))
+                        item.setDescription(description);
+
                     item.setCategorie(categorie);
-                    item.setNumSerie(noSerie);
+
+                    if(!(noSerie.equals("null")))
+                        item.setNumSerie(noSerie);
+
                     item.setPrix(prix);
                     item.setDateAchat(date);
 

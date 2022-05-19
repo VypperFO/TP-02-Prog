@@ -327,7 +327,7 @@ public class ViewInv {
 
             if (!filePath.endsWith("txt")) {
                 filePath = filePath.concat(".dat");
-            }
+            } 
             update();
         } catch (Exception e) {
             e.getMessage();
