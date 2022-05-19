@@ -154,7 +154,7 @@ public class ViewInv {
                 }
             }
         });
-        tabInv.setAutoCreateRowSorter(true);
+        tabInv.setAutoCreateRowSorter(false);
         tabInv.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel>(modelInv);
         tabInv.setRowSorter(sorter);
@@ -189,7 +189,8 @@ public class ViewInv {
             }
         };
         tabEnt = new JTable(modelEnt);
-        tabEnt.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        tabEnt.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tabEnt.setAutoCreateRowSorter(false);
 
         // BUTTONS
         btnFiltre = new JButton("Filtre");
@@ -314,14 +315,15 @@ public class ViewInv {
      */
     private void miNouveauAction() {
         try {
+            fc.resetChoosableFileFilters();
             fc.setDialogTitle("Nouveau inventaire...");
             fc.showSaveDialog(frame);
             isNouveau = true;
 
             File fichier = fc.getSelectedFile(); // Fichier en cours
             filePath = fichier.getPath();
+            filePath = filePath.concat(".dat");
             update();
-            miSaveAction();
         } catch (Exception e) {
             e.getMessage();
         }
@@ -419,6 +421,7 @@ public class ViewInv {
                 File fichier = fc.getSelectedFile(); // Fichier en cours
 
                 String filePath = fichier.getPath(); // Chemin fu fichier en cours
+                filePath = filePath.concat(".txt");
                 try {
                     writeFileObject(filePath);
                     isSave = true;

@@ -162,7 +162,7 @@ public class ViewAjoutInv {
         String prix = txfPrix.getText(); // prix objet
         Date date = dateChooser.getDate(); // date objet
 
-        if (!(nom.equals("") || prix.equals("") || date.equals(""))) {
+        if (!(nom.equals("") || prix.equals("") || date.equals("") || Double.parseDouble(prix) < 0)) {
             return true;
         } else {
             return false;

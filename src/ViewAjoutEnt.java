@@ -78,15 +78,34 @@ public class ViewAjoutEnt {
      */
     private void btnAjoutAction() {
         try {
-            int selectedRow = ViewInv.tabInv.getSelectedRow(); // Ligne sélectionner dans l'inventaire
-            String description = txaDescription.getText(); // description choisit
-            Date dateRaw = dateChooser.getDate(); // Date complète choisit
-            LocalDate date = dateRaw.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(); // Date raffinée et au bon format
-
-            ViewInv.listInventaire.get(selectedRow).addEntretien(date, description);
-            dialog.dispose();
+            if (isValide()) {
+                int selectedRow = ViewInv.tabInv.getSelectedRow(); // Ligne sélectionner dans l'inventaire
+                String description = txaDescription.getText(); // description choisit
+                Date dateRaw = dateChooser.getDate(); // Date complète choisit
+                LocalDate date = dateRaw.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(); // Date raffinée et au bon format
+    
+                ViewInv.listInventaire.get(selectedRow).addEntretien(date, description);
+                dialog.dispose();
+            } else {
+                JOptionPane.showMessageDialog(dialog, "Donnée(s) manquante(s)");
+            }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(dialog, "Une erreur est survenu");
+        }
+    }
+
+    /**
+     * Fonction qui permet de vérifier si tout les champs requis sont remplis
+     * @return Retourne true si valide, false si non
+     */
+    private boolean isValide() {
+        String description = txaDescription.getText(); // description entretien
+        Date date = dateChooser.getDate(); // date entretien
+
+        if (!(description.equals("") || date.equals(""))) {
+            return true;
+        } else {
+            return false;
         }
     }
 

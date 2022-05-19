@@ -173,7 +173,7 @@ public class ViewModifInv {
         String prix = txfPrix.getText(); // Prix objet
         Date date = dateChooser.getDate(); // Date objet
 
-        if (!(nom.equals("") || prix.equals("") || date.equals(""))) {
+        if (!(nom.equals("") || prix.equals("") || date.equals("") || Double.parseDouble(prix) < 0)) {
             return true;
         } else {
             return false;
