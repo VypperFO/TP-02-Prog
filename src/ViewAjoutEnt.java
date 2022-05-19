@@ -21,13 +21,13 @@ public class ViewAjoutEnt {
     JButton btnAjout, btnCancel;
     JPanel panCenter, panBtn;
 
-    Dimension dimTf = new Dimension(250, 25);
-    Dimension dimLab = new Dimension(100, 25);
-    Dimension dimBtn = new Dimension(100, 25);
+    Dimension dimTf = new Dimension(250, 25); // Dimension textfield et textarea
+    Dimension dimLab = new Dimension(100, 25); // Dimension labels
+    Dimension dimBtn = new Dimension(100, 25); // Dimension boutons
 
     public ViewAjoutEnt() {
         // DIALOG
-        dialog = new JDialog((JDialog) null, "Ajout", true);
+        dialog = new JDialog((JDialog) null, "Ajout entretien", true);
         dialog.setTitle("Ajouter");
         dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         dialog.setSize(400, 350);
@@ -73,13 +73,16 @@ public class ViewAjoutEnt {
         dialog.setVisible(true);
     }
 
+    /**
+     * Bouton qui permet d'ajout un entretien dans un objet d'inventaire
+     */
     private void btnAjoutAction() {
         try {
-            int selectedRow = ViewInv.tabInv.getSelectedRow();
-            String description = txaDescription.getText();
-            Date dateRaw = dateChooser.getDate();
-            LocalDate date = dateRaw.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-    
+            int selectedRow = ViewInv.tabInv.getSelectedRow(); // Ligne sélectionner dans l'inventaire
+            String description = txaDescription.getText(); // description choisit
+            Date dateRaw = dateChooser.getDate(); // Date complète choisit
+            LocalDate date = dateRaw.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(); // Date raffinée et au bon format
+
             ViewInv.listInventaire.get(selectedRow).addEntretien(date, description);
             dialog.dispose();
         } catch (Exception e) {
@@ -87,6 +90,9 @@ public class ViewAjoutEnt {
         }
     }
 
+    /**
+     * Bouton qui permet d'annuler l'opération
+     */
     private void btnCancelAction() {
         dialog.dispose();
     }

@@ -25,14 +25,14 @@ public class ViewAjoutInv {
     JComboBox cmbCategorie;
     JPanel panCenter, panBtn;
 
-    String[] categories = { "Jeux", "Cameras", "Tripod", "Autres" };
-    Dimension dimTf = new Dimension(250, 25);
-    Dimension dimLab = new Dimension(100, 25);
-    Dimension dimBtn = new Dimension(100, 25);
+    String[] categories = { "Jeux", "Cameras", "Tripod", "Autres" }; // Catégories possibles
+    Dimension dimTf = new Dimension(250, 25); // Dimension textfield et textarea
+    Dimension dimLab = new Dimension(100, 25); // Dimension labels
+    Dimension dimBtn = new Dimension(100, 25); // Dimension bouton
 
     public ViewAjoutInv() {
         // DIALOG
-        dialog = new JDialog((JDialog) null, "Ajout", true);
+        dialog = new JDialog((JDialog) null, "Ajout inventaire", true);
         dialog.setTitle("Ajout");
         dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         dialog.setSize(400, 525);
@@ -109,18 +109,21 @@ public class ViewAjoutInv {
         dialog.setVisible(true);
     }
 
+    /**
+     * Bouton qui permet d'ajouter un objet de classe Inventaire dans l'inventaire
+     */
     private void btnAjoutAction() {
         try {
             if (isValide()) {
                 try {
-                    double prix = Double.parseDouble(txfPrix.getText());
-                    Integer noSerie = 0;
-                    String nom = txfNom.getText();
-                    String description = txaDescription.getText();
-                    String categorie = cmbCategorie.getSelectedItem().toString();
-                    Date dateRaw = dateChooser.getDate();
-                    LocalDate date = dateRaw.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                    LinkedHashMap<LocalDate, String> entretien = new LinkedHashMap<>();
+                    double prix = Double.parseDouble(txfPrix.getText()); // Prix objet
+                    Integer noSerie = 0; // numéro série objet
+                    String nom = txfNom.getText(); // nom objet
+                    String description = txaDescription.getText(); // description objet
+                    String categorie = cmbCategorie.getSelectedItem().toString(); // catégorie objet
+                    Date dateRaw = dateChooser.getDate(); // date complète objet
+                    LocalDate date = dateRaw.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(); // date raffinée et au bon format objet
+                    LinkedHashMap<LocalDate, String> entretien = new LinkedHashMap<>(); // entretien objet
 
                     if (txfNumSerie.getText().equals("")) {
                         noSerie = null;
@@ -128,7 +131,7 @@ public class ViewAjoutInv {
                         noSerie = Integer.parseInt(txfNumSerie.getText());
                     }
 
-                    Inventaire item = new Inventaire(nom, description, categorie, prix, noSerie, date, entretien);
+                    Inventaire item = new Inventaire(nom, description, categorie, prix, noSerie, date, entretien); // création du nouveau objet
                     ViewInv.listInventaire.add(item);
 
                     dialog.dispose();
@@ -143,14 +146,21 @@ public class ViewAjoutInv {
         }
     }
 
+    /**
+     * Bouton qui permet d'annuler l'opération
+     */
     private void btnCancelAction() {
         dialog.dispose();
     }
 
+    /**
+     * Fonction qui permet de vérifier si tout les champs requis sont remplis
+     * @return Retourne true si valide, false si non
+     */
     private boolean isValide() {
-        String nom = txfNom.getText();
-        String prix = txfPrix.getText();
-        Date date = dateChooser.getDate();
+        String nom = txfNom.getText(); // nom objet
+        String prix = txfPrix.getText(); // prix objet
+        Date date = dateChooser.getDate(); // date objet
 
         if (!(nom.equals("") || prix.equals("") || date.equals(""))) {
             return true;

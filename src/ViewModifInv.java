@@ -23,7 +23,7 @@ public class ViewModifInv {
     JComboBox cmbCategorie;
     JPanel panCenter, panBtn;
 
-    String[] categories = { "Jeux", "Cameras", "Tripods" }; // Les catégories disponibles
+    String[] categories = { "Jeux", "Cameras", "Tripod", "Autres" }; // Les catégories disponibles
     Dimension dimTf = new Dimension(250, 25); // Dimension textfield et textarea
     Dimension dimLab = new Dimension(100, 25); // Dimension labels
     Dimension dimBtn = new Dimension(100, 25); // Dimension boutons
@@ -32,7 +32,7 @@ public class ViewModifInv {
 
     public ViewModifInv() {
         // DIALOG
-        dialog = new JDialog((JDialog) null, "Modifier", true);
+        dialog = new JDialog((JDialog) null, "Modification inventaire", true);
         dialog.setTitle("Modifier");
         dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         dialog.setSize(400, 525);
