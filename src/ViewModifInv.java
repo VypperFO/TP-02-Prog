@@ -1,3 +1,10 @@
+/**
+ * @author Félix-Olivier Latulippe
+ * @DA 2173242
+ * @session HV2022
+ * 
+ * Ce fichier contient le frame de modification de l'inventaire
+ */
 import javax.swing.*;
 import java.awt.*;
 import java.time.LocalDate;

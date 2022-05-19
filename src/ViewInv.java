@@ -1,3 +1,11 @@
+/**
+ * @author Félix-Olivier Latulippe
+ * @DA 2173242
+ * @session HV2022
+ * 
+ * Ce fichier contient le frame, les actions listener ainsi que les méthodes maisons 
+ */
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.BufferedWriter;
@@ -9,6 +17,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.regex.PatternSyntaxException;
@@ -37,18 +46,18 @@ public class ViewInv {
     JPanel panWest, panEast, panItemsInv, panBtnInv, panBtnEnt, panQuit;
     JFileChooser fc = new JFileChooser();
 
-    Dimension dimTxf = new Dimension(125, 25);
-    Dimension dimBtn = new Dimension(125, 25);
+    Dimension dimTxf = new Dimension(125, 25); // Dimension des textField
+    Dimension dimBtn = new Dimension(125, 25); // Dimension des bouttons
 
-    String[] colNamesInv = { "Nom", "Categorie", "Prix", "Date achat", "Description" };
-    String[] colNamesEnt = { "Date", "Description" };
+    String[] colNamesInv = { "Nom", "Categorie", "Prix", "Date achat", "Description" }; // Noms colonnes inventaire
+    String[] colNamesEnt = { "Date", "Description" }; // Noms colonnes entretiens
 
-    public boolean isSave = false;
-    public boolean isNouveau = false;
-    public String title = "";
-    public String filePath = "";
+    public boolean isSave = false; // Boolean si inventaire est sauvegardé
+    public boolean isNouveau = false; // Boolean si inventaire est nouveau
+    public String title = ""; // Titre du fichier en cours
+    public String filePath = ""; // Chemin du fichier en cours
 
-    public static ArrayList<Inventaire> listInventaire;
+    public static ArrayList<Inventaire> listInventaire; // La liste des objets d'inventaires
 
     public ViewInv() throws IOException {
         frame = new JFrame(title + "Félix-Olivier 2173242");
@@ -267,12 +276,18 @@ public class ViewInv {
      * @@@@@@@@@@@@@@
      */
 
+    /**
+     * Item menu qui affiche des informations sur l'application 
+     */
     private void miProposAction() {
         JOptionPane.showMessageDialog(frame,
                 "Travail Pratique 2 \n Félix-Olivier Latulippe 2173242 \n Session H2022 \n Dans le cadre du cours 420-C27",
                 "À propos", JOptionPane.INFORMATION_MESSAGE);
     }
 
+    /**
+     * Item menu qui permet de quitter et de sauvegarder
+     */
     private void miQuitAction() {
         int reponse = JOptionPane.showConfirmDialog(frame, "Voulez-vous quitter?", "Quitter",
                 JOptionPane.YES_NO_OPTION); // Réponse de l'utilisateur
@@ -285,38 +300,47 @@ public class ViewInv {
                 if (reponseSave == JOptionPane.YES_OPTION) {
                     try {
                         miSaveAction();
+                        System.exit(0);
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
                     }
-                    System.exit(0);
                 }
             }
-
-            System.exit(0);
         }
     }
 
+    /**
+     * Item menu qui permet de créer un nouveau fichier inventaire
+     */
     private void miNouveauAction() {
-        fc.setDialogTitle("Nouveau inventaire...");
-        fc.showSaveDialog(frame);
-        isNouveau = true;
+        try {
+            fc.setDialogTitle("Nouveau inventaire...");
+            fc.showSaveDialog(frame);
+            isNouveau = true;
 
-        File fichier = fc.getSelectedFile();
-        filePath = fichier.getPath();
-        update();
+            File fichier = fc.getSelectedFile(); // Fichier en cours
+            filePath = fichier.getPath();
+            update();
+            miSaveAction();
+        } catch (Exception e) {
+            e.getMessage();
+        }
     }
 
+    /**
+     * Item menu qui permet d'ouvrir un fichier déjà exisant 
+     */
     private void miOuvrirAction() {
         fc.setDialogTitle("Ouverture inventaire");
 
-        FileNameExtensionFilter fileFilter = new FileNameExtensionFilter("*.dat", "dat");
+        FileNameExtensionFilter fileFilter = new FileNameExtensionFilter("*.dat", "dat"); // Filtre 
         fc.setFileFilter(fileFilter);
 
         int rep = fc.showOpenDialog(frame);
         if (rep == JFileChooser.APPROVE_OPTION) {
-            File fichier = fc.getSelectedFile();
+            File fichier = fc.getSelectedFile(); // Fichier en cours
 
-            String filePath = fichier.getPath();
+            String filePath = fichier.getPath(); // Chemin du fichier 
             try {
                 if (!isInventaireOuvert()) {
                     readFileObject(filePath);
@@ -340,6 +364,9 @@ public class ViewInv {
         }
     }
 
+    /**
+     * Item menu qui permet de fermer l'inventaire ouvert
+     */
     private void miFermerAction() {
         if (isInventaireOuvert()) {
             modelInv.setRowCount(0);
@@ -347,18 +374,23 @@ public class ViewInv {
             isNouveau = false;
             isSave = false;
 
+            updateEntretien();
+
             frame.setTitle("Félix-Olivier 2173242");
             filePath = "";
         } else {
-            JOptionPane.showMessageDialog(frame, "Aucune inventaire ouverte");
+            JOptionPane.showMessageDialog(frame, "Aucun inventaire ouvert");
         }
     }
 
+    /**
+     * Item menu qui permet de sauvegarder 
+     */
     private void miSaveAction() {
         if (isInventaireOuvert()) {
-            File fichier = fc.getSelectedFile();
+            File fichier = fc.getSelectedFile(); // Fichier en cours
 
-            String filePath = fichier.getPath();
+            String filePath = fichier.getPath(); // Chemin du fichier en cours
             try {
                 writeFileObject(filePath);
                 isSave = true;
@@ -371,19 +403,22 @@ public class ViewInv {
         }
     }
 
+    /**
+     * Item menu qui permet de sauvegarder à un endroit spécifique
+     */
     private void miSaveToAction() {
         fc.setDialogTitle("Enregistrement inventaire");
 
-        FileNameExtensionFilter fileFilter = new FileNameExtensionFilter("*.dat", "dat");
+        FileNameExtensionFilter fileFilter = new FileNameExtensionFilter("*.dat", "dat"); // Filtre 
         fc.setFileFilter(fileFilter);
 
         if (isInventaireOuvert()) {
-            int rep = fc.showSaveDialog(frame);
+            int rep = fc.showSaveDialog(frame); // Réponse utilisateur
 
             if (rep == JFileChooser.APPROVE_OPTION) {
-                File fichier = fc.getSelectedFile();
+                File fichier = fc.getSelectedFile(); // Fichier en cours
 
-                String filePath = fichier.getPath();
+                String filePath = fichier.getPath(); // Chemin fu fichier en cours
                 try {
                     writeFileObject(filePath);
                     isSave = true;
@@ -396,19 +431,22 @@ public class ViewInv {
         }
     }
 
+    /**
+     * Item menu qui permet d'exporter en .txt l'inventaire
+     */
     private void miExportAction() {
         fc.setDialogTitle("Exportation fichier texte");
 
-        FileNameExtensionFilter fileFilter = new FileNameExtensionFilter("*.txt", "txt");
+        FileNameExtensionFilter fileFilter = new FileNameExtensionFilter("*.txt", "txt"); // Filtre
         fc.setFileFilter(fileFilter);
 
         if (isInventaireOuvert()) {
-            int rep = fc.showSaveDialog(frame);
+            int rep = fc.showSaveDialog(frame); // Réponse utilisateur
 
             if (rep == JFileChooser.APPROVE_OPTION) {
-                File fichier = fc.getSelectedFile();
+                File fichier = fc.getSelectedFile(); // Fichier en cours
 
-                String filePath = fichier.getPath();
+                String filePath = fichier.getPath(); // Chemin fichier en cours
 
                 if (!filePath.endsWith("txt")) {
                     filePath = filePath.concat(".txt");
@@ -433,33 +471,9 @@ public class ViewInv {
      * @@@@@@@@@@@@@@
      */
 
-    private void btnMoinsInvAction() {
-        if (isInventaireOuvert()) {
-            int ligneSelectionner = tabInv.getSelectedRow();
-
-            listInventaire.remove(ligneSelectionner);
-            update();
-        } else {
-            JOptionPane.showMessageDialog(frame, "Aucun inventaire ouvert");
-        }
-    }
-
-    private void btnQuitAction() {
-        miQuitAction();
-    }
-
-    private void btnMoinsEntAction() {
-        if (isInventaireOuvert()) {
-            int ligneSelectionner = tabEnt.getSelectedRow();
-
-        }
-    }
-
-    private void btnPlusEntAction() {
-        new ViewAjoutEnt();
-        updateEntretien();
-    }
-
+    /**
+     * Bouton qui sert à ajouter un objet à l'inventaire
+     */
     private void btnPlusInvAction() {
         if (isInventaireOuvert() || isNouveau) {
             new ViewAjoutInv();
@@ -469,6 +483,57 @@ public class ViewInv {
         } else {
             JOptionPane.showMessageDialog(frame, "Aucun inventaire ouvert");
         }
+    }
+
+    /**
+     * Bouton qui sert à supprimer un objet à l'inventaire
+     */
+    private void btnMoinsInvAction() {
+        if (isInventaireOuvert()) {
+            int ligneSelectionner = tabInv.getSelectedRow(); // Ligne inventaire sélectionner
+
+            listInventaire.remove(ligneSelectionner);
+            update();
+        } else {
+            JOptionPane.showMessageDialog(frame, "Aucun inventaire ouvert");
+        }
+    }
+
+    /**
+     * Bouton qui sert à ajouter un entretien si un inventaire est ouvert et un objet est sélectionner
+     */
+    private void btnPlusEntAction() {
+        if (isInventaireOuvert()) {
+            if (tabInv.getSelectedRow() != -1) {
+                new ViewAjoutEnt();
+                updateEntretien();
+            } else {
+                JOptionPane.showMessageDialog(frame, "Aucun objet sélectionné");
+            }
+        } else {
+            JOptionPane.showMessageDialog(frame, "Aucun inventaire ouvert");
+        }
+    }
+
+    /**
+     * Bouton qui sert à supprimer un entretien si un inventaire est ouvert et un objet est sélectionner
+     */
+    private void btnMoinsEntAction() {
+        if (isInventaireOuvert()) {
+            int ligneSelectionnerInventaire = tabInv.getSelectedRow();
+            int ligneSelectionnerEntretien = tabEnt.getSelectedRow();
+            String keySelectionner = String.valueOf(modelEnt.getValueAt(ligneSelectionnerEntretien, 0));
+
+            listInventaire.get(ligneSelectionnerInventaire).removeEntretien(keySelectionner);
+            updateEntretien();
+        }
+    }
+    
+    /**
+     * Bouton qui sert à quitter le programme
+     */
+    private void btnQuitAction() {
+        miQuitAction();
     }
 
     /*

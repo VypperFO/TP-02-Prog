@@ -1,3 +1,10 @@
+/**
+ * @author Félix-Olivier Latulippe
+ * @DA 2173242
+ * @session HV2022
+ * 
+ * Ce fichier contient la classe Inventaire
+ */
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.LinkedHashMap;
@@ -78,5 +85,9 @@ public class Inventaire implements Serializable {
 
     public void addEntretien(LocalDate date, String description) {
         this.entretien.put(date, description);
+    }
+
+    public void removeEntretien(String key) {
+        this.entretien.remove(key);
     }
 }
