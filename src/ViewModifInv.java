@@ -15,7 +15,6 @@ import com.toedter.calendar.JDateChooser;
 
 public class ViewModifInv {
     JDialog dialog;
-
     JLabel labNom, labNumSerie, labCategorie, labPrix, labDate, labDescription;
     JTextField txfNom, txfNumSerie, txfPrix;
     JTextArea txaDescription;
@@ -24,12 +23,12 @@ public class ViewModifInv {
     JComboBox cmbCategorie;
     JPanel panCenter, panBtn;
 
-    String[] categories = { "Jeux", "Cameras", "Salopes" };
-    Dimension dimTf = new Dimension(250, 25);
-    Dimension dimLab = new Dimension(100, 25);
-    Dimension dimBtn = new Dimension(100, 25);
+    String[] categories = { "Jeux", "Cameras", "Tripods" }; // Les catégories disponibles
+    Dimension dimTf = new Dimension(250, 25); // Dimension textfield et textarea
+    Dimension dimLab = new Dimension(100, 25); // Dimension labels
+    Dimension dimBtn = new Dimension(100, 25); // Dimension boutons
 
-    private int selectedRow = ViewInv.tabInv.getSelectedRow();
+    private int selectedRow = ViewInv.tabInv.getSelectedRow(); // Ligne sélectionner tableau inventaire
 
     public ViewModifInv() {
         // DIALOG
@@ -56,9 +55,9 @@ public class ViewModifInv {
         labDescription.setPreferredSize(dimLab);
 
         // TEXTFIELD
-        String nom = ViewInv.listInventaire.get(selectedRow).getNom();
-        String noSerie = String.valueOf(ViewInv.listInventaire.get(selectedRow).getNumSerie());
-        String prix = String.valueOf(ViewInv.listInventaire.get(selectedRow).getPrix());
+        String nom = ViewInv.listInventaire.get(selectedRow).getNom(); // Nom objet
+        String noSerie = String.valueOf(ViewInv.listInventaire.get(selectedRow).getNumSerie()); // numéro série objet
+        String prix = String.valueOf(ViewInv.listInventaire.get(selectedRow).getPrix()); // Prix objet
 
         if (noSerie.equals("null"))
             noSerie = "";
@@ -71,20 +70,20 @@ public class ViewModifInv {
         txfPrix.setPreferredSize(dimTf);
 
         // COMBOBOX
-        String categorie = ViewInv.listInventaire.get(selectedRow).getCategorie();
+        String categorie = ViewInv.listInventaire.get(selectedRow).getCategorie(); // Catégorie objet
         cmbCategorie = new JComboBox(categories);
         cmbCategorie.setSelectedItem(categorie);
         cmbCategorie.setPreferredSize(dimTf);
 
         // DATE CHOOSER
-        LocalDate dateRaw = ViewInv.listInventaire.get(selectedRow).getDateAchat();
-        Date date = Date.from(dateRaw.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        LocalDate dateRaw = ViewInv.listInventaire.get(selectedRow).getDateAchat(); // Date complète
+        Date date = Date.from(dateRaw.atStartOfDay(ZoneId.systemDefault()).toInstant()); // Date raffinée et au bon format
 
         dateChooser = new JDateChooser(date);
         dateChooser.setPreferredSize(dimTf);
 
         // TEXTAREA
-        String description = ViewInv.listInventaire.get(selectedRow).getDescription();
+        String description = ViewInv.listInventaire.get(selectedRow).getDescription(); // Description objet
         txaDescription = new JTextArea(description);
         txaDescription.setPreferredSize(new Dimension(250, 250));
 
@@ -123,33 +122,36 @@ public class ViewModifInv {
         dialog.setVisible(true);
     }
 
+    /**
+     * Bouton qui sert à modifier un objet dans l'inventaire
+     */
     private void btnModifAction() {
         try {
             if (isValide()) {
                 try {
-                    String nom = txfNom.getText();
-                    String description = txaDescription.getText();
-                    String categorie = cmbCategorie.getSelectedItem().toString();
-                    Integer noSerie = Integer.parseInt(txfNumSerie.getText());
-                    double prix = Double.parseDouble(txfPrix.getText());
-                    Date dateRaw = dateChooser.getDate();
-                    LocalDate date = dateRaw.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-    
+                    String nom = txfNom.getText(); // Nom objet
+                    String description = txaDescription.getText(); // Description objet
+                    String categorie = cmbCategorie.getSelectedItem().toString(); // Catégorie objet
+                    Integer noSerie = Integer.parseInt(txfNumSerie.getText()); // Numéro série objet
+                    double prix = Double.parseDouble(txfPrix.getText()); // Prix objet
+                    Date dateRaw = dateChooser.getDate(); // Date complète objet
+                    LocalDate date = dateRaw.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(); // Date raffinée et au bon format
+
                     if (txfNumSerie.getText().equals("")) {
                         noSerie = null;
                     } else {
                         noSerie = Integer.parseInt(txfNumSerie.getText());
                     }
-    
+
                     Inventaire item = ViewInv.listInventaire.get(selectedRow);
-    
+
                     item.setNom(nom);
                     item.setDescription(description);
                     item.setCategorie(categorie);
                     item.setNumSerie(noSerie);
                     item.setPrix(prix);
                     item.setDateAchat(date);
-    
+
                     dialog.dispose();
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(dialog, "Erreur de donnée");
@@ -162,10 +164,14 @@ public class ViewModifInv {
         }
     }
 
+    /**
+     * Fonction qui permet de vérifier si tout les champs requis sont remplis
+     * @return Retourne true si valide, false si non
+     */
     private boolean isValide() {
-        String nom = txfNom.getText();
-        String prix = txfPrix.getText();
-        Date date = dateChooser.getDate();
+        String nom = txfNom.getText(); // Nom objet
+        String prix = txfPrix.getText(); // Prix objet
+        Date date = dateChooser.getDate(); // Date objet
 
         if (!(nom.equals("") || prix.equals("") || date.equals(""))) {
             return true;
@@ -174,6 +180,9 @@ public class ViewModifInv {
         }
     }
 
+    /**
+     * Bouton qui annule l'opération
+     */
     private void btnCancelAction() {
         dialog.dispose();
     }
