@@ -322,7 +322,10 @@ public class ViewInv {
 
             File fichier = fc.getSelectedFile(); // Fichier en cours
             filePath = fichier.getPath();
-            filePath = filePath.concat(".dat");
+
+            if (!filePath.endsWith("txt")) {
+                    filePath = filePath.concat(".dat");
+                }
             update();
         } catch (Exception e) {
             e.getMessage();
@@ -447,15 +450,14 @@ public class ViewInv {
             int rep = fc.showSaveDialog(frame); // Réponse utilisateur
 
             if (rep == JFileChooser.APPROVE_OPTION) {
-                File fichier = fc.getSelectedFile(); // Fichier en cours
+                File file = fc.getSelectedFile(); // Fichier en cours
 
-                String filePath = fichier.getPath(); // Chemin fichier en cours
+                String cheminFile = file.getPath(); // Chemin fichier en cours
 
-                if (!filePath.endsWith("txt")) {
-                    filePath = filePath.concat(".txt");
-
+                if (!cheminFile.endsWith("txt")) {
+                    cheminFile = cheminFile.concat(".txt");
                     try {
-                        writeFile(filePath);
+                        writeFile(cheminFile);
                     } catch (Exception e) {
                         JOptionPane.showMessageDialog(frame, "Error");
                     }
@@ -653,6 +655,10 @@ public class ViewInv {
             Inventaire item = listInventaire.get(i);
             writer.write(item.getNom() + ", " + item.getCategorie() + ", " + item.getPrix() + ", " + item.getDateAchat()
                     + ", " + item.getDescription());
+            writer.newLine();
+            if (item.getEntretien().size() != 0) {
+                writer.write(String.valueOf(item.getEntretien()));
+            }
             writer.newLine();
             writer.newLine();
         }
