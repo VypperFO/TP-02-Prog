@@ -1,3 +1,4 @@
+
 /**
  * @author Félix-Olivier Latulippe
  * @DA 2173242
@@ -18,13 +19,14 @@ public class Inventaire implements Serializable {
 
     /**
      * Constructeur de la classe Inventaire
-     * @param nom nom objet
+     * 
+     * @param nom         nom objet
      * @param description description objet
-     * @param categorie categorie objet
-     * @param prix prix objet
-     * @param numSerie numéro série objet
-     * @param dateAchat date achat objet
-     * @param entretien entretiens objet
+     * @param categorie   categorie objet
+     * @param prix        prix objet
+     * @param numSerie    numéro série objet
+     * @param dateAchat   date achat objet
+     * @param entretien   entretiens objet
      */
     public Inventaire(String nom, String description, String categorie, double prix, Integer numSerie,
             LocalDate dateAchat, LinkedHashMap entretien) {
@@ -39,6 +41,7 @@ public class Inventaire implements Serializable {
 
     /**
      * Fonction qui permet d'avoir le nom de l'objet
+     * 
      * @return Retourne le nom de l'objet
      */
     public String getNom() {
@@ -47,6 +50,7 @@ public class Inventaire implements Serializable {
 
     /**
      * Fonction qui permet de modifier le nom de l'objet
+     * 
      * @param nom nom à modifier
      */
     public void setNom(String nom) {
@@ -55,6 +59,7 @@ public class Inventaire implements Serializable {
 
     /**
      * Fonction qui permet d'avoir la description de l'objet
+     * 
      * @return Retourne la description de l'objet
      */
     public String getDescription() {
@@ -63,6 +68,7 @@ public class Inventaire implements Serializable {
 
     /**
      * Fonction qui permet de modifier la description de l'ojet
+     * 
      * @param description description à modifier
      */
     public void setDescription(String description) {
@@ -71,6 +77,7 @@ public class Inventaire implements Serializable {
 
     /**
      * Fonction qui permet d'avoir la catégorie de l'objet
+     * 
      * @return Retourne la catégorie de l'objet
      */
     public String getCategorie() {
@@ -79,6 +86,7 @@ public class Inventaire implements Serializable {
 
     /**
      * Fonction qui permet de modifier la catégorie de l'objet
+     * 
      * @param categorie catégorie à modifier
      */
     public void setCategorie(String categorie) {
@@ -87,6 +95,7 @@ public class Inventaire implements Serializable {
 
     /**
      * Fonction qui permet d'avoir le prix de l'objet
+     * 
      * @return Retourne le prix de l'objet
      */
     public double getPrix() {
@@ -94,7 +103,8 @@ public class Inventaire implements Serializable {
     }
 
     /**
-     * Fonction qui permet de modifier le prix de l'objet 
+     * Fonction qui permet de modifier le prix de l'objet
+     * 
      * @param prix prix à modifier
      */
     public void setPrix(double prix) {
@@ -103,6 +113,7 @@ public class Inventaire implements Serializable {
 
     /**
      * Fonction qui permet d'avoir le numéro de série de l'objet
+     * 
      * @return Retourne le numéro de série de l'objet
      */
     public Integer getNumSerie() {
@@ -110,7 +121,8 @@ public class Inventaire implements Serializable {
     }
 
     /**
-     * Fonction qui permet de modifier le numéro de série de l'objet 
+     * Fonction qui permet de modifier le numéro de série de l'objet
+     * 
      * @param numSerie num.ro de série de l'objet
      */
     public void setNumSerie(Integer numSerie) {
@@ -119,6 +131,7 @@ public class Inventaire implements Serializable {
 
     /**
      * Fonction qui permet d'avoir la date d'achat de l'objet
+     * 
      * @return Retourne la date d'achat de l'objet
      */
     public LocalDate getDateAchat() {
@@ -127,6 +140,7 @@ public class Inventaire implements Serializable {
 
     /**
      * Fonction qui permet de modifier la date d'achat de l'objet
+     * 
      * @param dateAchat date d'achat à modifier
      */
     public void setDateAchat(LocalDate dateAchat) {
@@ -135,6 +149,7 @@ public class Inventaire implements Serializable {
 
     /**
      * Fonction qui permet d'avoir les entretiens de l'objet
+     * 
      * @return Retourne les entretiens de l'objet
      */
     public LinkedHashMap<LocalDate, String> getEntretien() {
@@ -143,7 +158,8 @@ public class Inventaire implements Serializable {
 
     /**
      * Fonction qui permet d'ajouter un entretien à l'objet
-     * @param date la date de l'entretien
+     * 
+     * @param date        la date de l'entretien
      * @param description la description de l'entretien
      */
     public void addEntretien(LocalDate date, String description) {
@@ -152,9 +168,10 @@ public class Inventaire implements Serializable {
 
     /**
      * Fonction qui permet de supprimer un entretien
+     * 
      * @param key la clé à supprimer
      */
-    public void removeEntretien(String key) {
+    public void removeEntretien(LocalDate key) {
         this.entretien.remove(key);
     }
 }

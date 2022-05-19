@@ -1,3 +1,4 @@
+
 /**
  * @author Félix-Olivier Latulippe
  * @DA 2173242
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.regex.PatternSyntaxException;
@@ -278,7 +280,7 @@ public class ViewInv {
      */
 
     /**
-     * Item menu qui affiche des informations sur l'application 
+     * Item menu qui affiche des informations sur l'application
      */
     private void miProposAction() {
         JOptionPane.showMessageDialog(frame,
@@ -324,8 +326,8 @@ public class ViewInv {
             filePath = fichier.getPath();
 
             if (!filePath.endsWith("txt")) {
-                    filePath = filePath.concat(".dat");
-                }
+                filePath = filePath.concat(".dat");
+            }
             update();
         } catch (Exception e) {
             e.getMessage();
@@ -333,19 +335,19 @@ public class ViewInv {
     }
 
     /**
-     * Item menu qui permet d'ouvrir un fichier déjà exisant 
+     * Item menu qui permet d'ouvrir un fichier déjà exisant
      */
     private void miOuvrirAction() {
         fc.setDialogTitle("Ouverture inventaire");
 
-        FileNameExtensionFilter fileFilter = new FileNameExtensionFilter("*.dat", "dat"); // Filtre 
+        FileNameExtensionFilter fileFilter = new FileNameExtensionFilter("*.dat", "dat"); // Filtre
         fc.setFileFilter(fileFilter);
 
         int rep = fc.showOpenDialog(frame);
         if (rep == JFileChooser.APPROVE_OPTION) {
             File fichier = fc.getSelectedFile(); // Fichier en cours
 
-            String filePath = fichier.getPath(); // Chemin du fichier 
+            String filePath = fichier.getPath(); // Chemin du fichier
             try {
                 if (!isInventaireOuvert()) {
                     readFileObject(filePath);
@@ -389,7 +391,7 @@ public class ViewInv {
     }
 
     /**
-     * Item menu qui permet de sauvegarder 
+     * Item menu qui permet de sauvegarder
      */
     private void miSaveAction() {
         if (isInventaireOuvert()) {
@@ -414,7 +416,7 @@ public class ViewInv {
     private void miSaveToAction() {
         fc.setDialogTitle("Enregistrement inventaire");
 
-        FileNameExtensionFilter fileFilter = new FileNameExtensionFilter("*.dat", "dat"); // Filtre 
+        FileNameExtensionFilter fileFilter = new FileNameExtensionFilter("*.dat", "dat"); // Filtre
         fc.setFileFilter(fileFilter);
 
         if (isInventaireOuvert()) {
@@ -505,7 +507,8 @@ public class ViewInv {
     }
 
     /**
-     * Bouton qui sert à ajouter un entretien si un inventaire est ouvert et un objet est sélectionner
+     * Bouton qui sert à ajouter un entretien si un inventaire est ouvert et un
+     * objet est sélectionner
      */
     private void btnPlusEntAction() {
         if (isInventaireOuvert()) {
@@ -521,19 +524,27 @@ public class ViewInv {
     }
 
     /**
-     * Bouton qui sert à supprimer un entretien si un inventaire est ouvert et un objet est sélectionner
+     * Bouton qui sert à supprimer un entretien si un inventaire est ouvert et un
+     * objet est sélectionner
      */
     private void btnMoinsEntAction() {
         if (isInventaireOuvert()) {
-            int ligneSelectionnerInventaire = tabInv.getSelectedRow();
-            int ligneSelectionnerEntretien = tabEnt.getSelectedRow();
-            String keySelectionner = String.valueOf(modelEnt.getValueAt(ligneSelectionnerEntretien, 0));
+            if (tabInv.getSelectedRow() != -1) {
+                int ligneSelectionnerInventaire = tabInv.getSelectedRow();
+                int ligneSelectionnerEntretien = tabEnt.getSelectedRow();
+                Object keySelectionner = modelEnt.getValueAt(ligneSelectionnerEntretien, 0);
 
-            listInventaire.get(ligneSelectionnerInventaire).removeEntretien(keySelectionner);
-            updateEntretien();
+                listInventaire.get(ligneSelectionnerInventaire)
+                        .removeEntretien(LocalDate.parse(String.valueOf(keySelectionner)));
+                updateEntretien();
+            } else {
+                JOptionPane.showMessageDialog(frame, "Aucun objet sélectionné");
+            }
+        } else {
+            JOptionPane.showMessageDialog(frame, "Aucun inventaire ouvert");
         }
     }
-    
+
     /**
      * Bouton qui sert à quitter le programme
      */
@@ -551,16 +562,18 @@ public class ViewInv {
 
     /**
      * Fonction pour initialiser un arraylist inventaire
-     * @return Retourne un arraylist 
+     * 
+     * @return Retourne un arraylist
      */
     public ArrayList<Inventaire> listInventaire() {
-        ArrayList<Inventaire> list = new ArrayList<>(); //  liste temporaire
+        ArrayList<Inventaire> list = new ArrayList<>(); // liste temporaire
 
         return list;
     }
 
     /**
      * Fonction qui vérifie si un inventaire est ouvert
+     * 
      * @return Retourne vrai si ouvert, faux si non
      */
     public boolean isInventaireOuvert() {
@@ -596,7 +609,9 @@ public class ViewInv {
     public void updateEntretien() {
         try {
             modelEnt.setRowCount(0);
-            LinkedHashMap entretiens = listInventaire.get(tabInv.getSelectedRow()).getEntretien(); // Entretiens de l'objet sélectionner
+            LinkedHashMap entretiens = listInventaire.get(tabInv.getSelectedRow()).getEntretien(); // Entretiens de
+                                                                                                   // l'objet
+                                                                                                   // sélectionner
             for (Object entree : entretiens.entrySet()) {
                 modelEnt.addRow(new Object[] { entree.toString().substring(0, 10), entree.toString().substring(11) });
             }
@@ -607,6 +622,7 @@ public class ViewInv {
 
     /**
      * Sérialise un fichier
+     * 
      * @param fileName le fichier de sortie
      * @throws IOException
      */
@@ -623,6 +639,7 @@ public class ViewInv {
 
     /**
      * Désérialise un fichier
+     * 
      * @param fileName le fichier d'entrée
      * @throws IOException
      * @throws ClassNotFoundException
@@ -645,6 +662,7 @@ public class ViewInv {
 
     /**
      * Fonction qui permet d'écrire dans un fichier avec un objet
+     * 
      * @param fileName le fichier de sortie
      * @throws IOException
      */
