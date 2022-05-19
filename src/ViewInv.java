@@ -153,7 +153,6 @@ public class ViewInv {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 if (e.getValueIsAdjusting()) {
-                    System.out.println("salope");
                     updateEntretien();
                 }
             }
@@ -170,8 +169,7 @@ public class ViewInv {
             @Override
             public void keyReleased(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_DOWN)
-                    System.out.println("salope");
-                updateEntretien();
+                    updateEntretien();
             }
         });
 
@@ -451,10 +449,15 @@ public class ViewInv {
     }
 
     private void btnMoinsEntAction() {
+        if (isInventaireOuvert()) {
+            int ligneSelectionner = tabEnt.getSelectedRow();
+
+        }
     }
 
     private void btnPlusEntAction() {
         new ViewAjoutEnt();
+        updateEntretien();
     }
 
     private void btnPlusInvAction() {
@@ -507,11 +510,14 @@ public class ViewInv {
     }
 
     public void updateEntretien() {
-        modelEnt.setRowCount(0);
-        LinkedHashMap entretiens = listInventaire.get(tabInv.getSelectedRow()).getEntretien();
-
-        for (int i = 0; i < entretiens.size(); i++) {
-            System.out.println(entretiens.toString());
+        try {
+            modelEnt.setRowCount(0);
+            LinkedHashMap entretiens = listInventaire.get(tabInv.getSelectedRow()).getEntretien();
+            for (Object entree : entretiens.entrySet()) {
+                modelEnt.addRow(new Object[] { entree.toString().substring(0, 10), entree.toString().substring(11) });
+            }
+        } catch (Exception e) {
+            e.getMessage();
         }
     }
 

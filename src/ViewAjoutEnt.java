@@ -67,14 +67,17 @@ public class ViewAjoutEnt {
     }
 
     private void btnAjoutAction() {
-        int selectedRow = ViewInv.tabInv.getSelectedRow();
-        String description = txaDescription.getText();
-        Date dateRaw = dateChooser.getDate();
-        LocalDate date = dateRaw.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-
-        ViewInv.listInventaire.get(selectedRow).addEntretien(date, description);
-        System.out.println(ViewInv.listInventaire.get(selectedRow).getEntretien());
-        dialog.dispose();
+        try {
+            int selectedRow = ViewInv.tabInv.getSelectedRow();
+            String description = txaDescription.getText();
+            Date dateRaw = dateChooser.getDate();
+            LocalDate date = dateRaw.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    
+            ViewInv.listInventaire.get(selectedRow).addEntretien(date, description);
+            dialog.dispose();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(dialog, "Une erreur est survenu");
+        }
     }
 
     private void btnCancelAction() {

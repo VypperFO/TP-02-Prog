@@ -132,7 +132,7 @@ public class ViewAjoutInv {
                 JOptionPane.showMessageDialog(dialog, "Donnée(s) manquante(s)");
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(dialog, "Error");
+            JOptionPane.showMessageDialog(dialog, "Donnée(s) manquante(s)");
         }
     }
 

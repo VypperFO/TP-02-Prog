@@ -117,36 +117,40 @@ public class ViewModifInv {
     }
 
     private void btnModifAction() {
-        if (isValide()) {
-            try {
-                String nom = txfNom.getText();
-                String description = txaDescription.getText();
-                String categorie = cmbCategorie.getSelectedItem().toString();
-                Integer noSerie = Integer.parseInt(txfNumSerie.getText());
-                double prix = Double.parseDouble(txfPrix.getText());
-                Date dateRaw = dateChooser.getDate();
-                LocalDate date = dateRaw.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-
-                if (txfNumSerie.getText().equals("")) {
-                    noSerie = null;
-                } else {
-                    noSerie = Integer.parseInt(txfNumSerie.getText());
+        try {
+            if (isValide()) {
+                try {
+                    String nom = txfNom.getText();
+                    String description = txaDescription.getText();
+                    String categorie = cmbCategorie.getSelectedItem().toString();
+                    Integer noSerie = Integer.parseInt(txfNumSerie.getText());
+                    double prix = Double.parseDouble(txfPrix.getText());
+                    Date dateRaw = dateChooser.getDate();
+                    LocalDate date = dateRaw.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    
+                    if (txfNumSerie.getText().equals("")) {
+                        noSerie = null;
+                    } else {
+                        noSerie = Integer.parseInt(txfNumSerie.getText());
+                    }
+    
+                    Inventaire item = ViewInv.listInventaire.get(selectedRow);
+    
+                    item.setNom(nom);
+                    item.setDescription(description);
+                    item.setCategorie(categorie);
+                    item.setNumSerie(noSerie);
+                    item.setPrix(prix);
+                    item.setDateAchat(date);
+    
+                    dialog.dispose();
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(dialog, "Erreur de donnée");
                 }
-
-                Inventaire item = ViewInv.listInventaire.get(selectedRow);
-
-                item.setNom(nom);
-                item.setDescription(description);
-                item.setCategorie(categorie);
-                item.setNumSerie(noSerie);
-                item.setPrix(prix);
-                item.setDateAchat(date);
-
-                dialog.dispose();
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(dialog, "Erreur de donnée");
+            } else {
+                JOptionPane.showMessageDialog(dialog, "Donnée(s) manquante(s)");
             }
-        } else {
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(dialog, "Donnée(s) manquante(s)");
         }
     }
