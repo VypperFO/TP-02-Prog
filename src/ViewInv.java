@@ -544,12 +544,20 @@ public class ViewInv {
      * @@@@@@@@@@@@@@@@
      */
 
+    /**
+     * Fonction pour initialiser un arraylist inventaire
+     * @return Retourne un arraylist 
+     */
     public ArrayList<Inventaire> listInventaire() {
-        ArrayList<Inventaire> list = new ArrayList<>();
+        ArrayList<Inventaire> list = new ArrayList<>(); //  liste temporaire
 
         return list;
     }
 
+    /**
+     * Fonction qui vérifie si un inventaire est ouvert
+     * @return Retourne vrai si ouvert, faux si non
+     */
     public boolean isInventaireOuvert() {
         if (modelInv.getRowCount() > 0) {
             return true;
@@ -558,6 +566,9 @@ public class ViewInv {
         }
     }
 
+    /**
+     * Fonction qui permet de mettre à jour le JFrame
+     */
     public void update() {
         modelInv.setRowCount(0);
 
@@ -574,10 +585,13 @@ public class ViewInv {
         frame.setTitle(title + " Félix-Olivier 2173242");
     }
 
+    /**
+     * Fonction qui permet de mettre à jour le model des entretiens
+     */
     public void updateEntretien() {
         try {
             modelEnt.setRowCount(0);
-            LinkedHashMap entretiens = listInventaire.get(tabInv.getSelectedRow()).getEntretien();
+            LinkedHashMap entretiens = listInventaire.get(tabInv.getSelectedRow()).getEntretien(); // Entretiens de l'objet sélectionner
             for (Object entree : entretiens.entrySet()) {
                 modelEnt.addRow(new Object[] { entree.toString().substring(0, 10), entree.toString().substring(11) });
             }
@@ -586,8 +600,13 @@ public class ViewInv {
         }
     }
 
+    /**
+     * Sérialise un fichier
+     * @param fileName le fichier de sortie
+     * @throws IOException
+     */
     public void writeFileObject(String fileName) throws IOException {
-        ObjectOutputStream sortie = new ObjectOutputStream(new FileOutputStream(fileName));
+        ObjectOutputStream sortie = new ObjectOutputStream(new FileOutputStream(fileName)); // La sortie outputstream
 
         sortie.write(listInventaire.size());
         for (Inventaire object : listInventaire) {
@@ -597,9 +616,15 @@ public class ViewInv {
         sortie.close();
     }
 
+    /**
+     * Désérialise un fichier
+     * @param fileName le fichier d'entrée
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public void readFileObject(String fileName) throws IOException, ClassNotFoundException {
         try {
-            ObjectInputStream entree = new ObjectInputStream(new FileInputStream(fileName));
+            ObjectInputStream entree = new ObjectInputStream(new FileInputStream(fileName)); // L'entrée inputstream
 
             listInventaire.clear();
             int nb = entree.read();
@@ -613,8 +638,13 @@ public class ViewInv {
         }
     }
 
+    /**
+     * Fonction qui permet d'écrire dans un fichier avec un objet
+     * @param fileName le fichier de sortie
+     * @throws IOException
+     */
     public void writeFile(String fileName) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, false));
+        BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, false)); // Le writer bufferedwriter
 
         for (int i = 0; i < listInventaire.size(); i++) {
             Inventaire item = listInventaire.get(i);
