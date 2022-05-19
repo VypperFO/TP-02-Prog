@@ -529,7 +529,7 @@ public class ViewInv {
      */
     private void btnMoinsEntAction() {
         if (isInventaireOuvert()) {
-            if (tabInv.getSelectedRow() != -1) {
+            if (tabEnt.getSelectedRow() != -1) {
                 int ligneSelectionnerInventaire = tabInv.getSelectedRow();
                 int ligneSelectionnerEntretien = tabEnt.getSelectedRow();
                 Object keySelectionner = modelEnt.getValueAt(ligneSelectionnerEntretien, 0);
