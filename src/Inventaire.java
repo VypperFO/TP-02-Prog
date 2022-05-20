@@ -12,7 +12,7 @@ import java.util.LinkedHashMap;
 
 public class Inventaire implements Serializable {
     private String nom, description, categorie; // Le nom, la description et la categorie de l'objet
-    private Integer numSerie; // Numéro de série objet
+    private String numSerie; // Numéro de série objet
     private double prix; // Prix objet
     private LocalDate dateAchat; // Date achat objet
     private LinkedHashMap<LocalDate, String> entretien; // entretiens objet
@@ -28,7 +28,7 @@ public class Inventaire implements Serializable {
      * @param dateAchat   date achat objet
      * @param entretien   entretiens objet
      */
-    public Inventaire(String nom, String description, String categorie, double prix, Integer numSerie,
+    public Inventaire(String nom, String description, String categorie, double prix, String numSerie,
             LocalDate dateAchat, LinkedHashMap entretien) {
         this.nom = nom;
         this.description = description;
@@ -116,7 +116,7 @@ public class Inventaire implements Serializable {
      * 
      * @return Retourne le numéro de série de l'objet
      */
-    public Integer getNumSerie() {
+    public String getNumSerie() {
         return numSerie;
     }
 
@@ -125,7 +125,7 @@ public class Inventaire implements Serializable {
      * 
      * @param numSerie num.ro de série de l'objet
      */
-    public void setNumSerie(Integer numSerie) {
+    public void setNumSerie(String numSerie) {
         this.numSerie = numSerie;
     }
 

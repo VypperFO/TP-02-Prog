@@ -317,6 +317,7 @@ public class ViewInv {
      */
     private void miNouveauAction() {
         try {
+            miFermerAction();
             fc.resetChoosableFileFilters();
             fc.setDialogTitle("Nouveau inventaire...");
             fc.showSaveDialog(frame);
@@ -325,9 +326,9 @@ public class ViewInv {
             File fichier = fc.getSelectedFile(); // Fichier en cours
             filePath = fichier.getPath();
 
-            if (!filePath.endsWith("txt")) {
+            if (!filePath.endsWith("dat")) {
                 filePath = filePath.concat(".dat");
-            } 
+            }
             update();
         } catch (Exception e) {
             e.getMessage();
@@ -398,6 +399,9 @@ public class ViewInv {
             File fichier = fc.getSelectedFile(); // Fichier en cours
 
             String filePath = fichier.getPath(); // Chemin du fichier en cours
+            if (!filePath.endsWith("dat")) {
+                filePath = filePath.concat(".dat");
+            }
             try {
                 writeFileObject(filePath);
                 isSave = true;
@@ -426,7 +430,9 @@ public class ViewInv {
                 File fichier = fc.getSelectedFile(); // Fichier en cours
 
                 String filePath = fichier.getPath(); // Chemin fu fichier en cours
-                filePath = filePath.concat(".txt");
+                if (!filePath.endsWith("dat")) {
+                    filePath = filePath.concat(".dat");
+                }
                 try {
                     writeFileObject(filePath);
                     isSave = true;
@@ -530,9 +536,9 @@ public class ViewInv {
     private void btnMoinsEntAction() {
         if (isInventaireOuvert()) {
             if (tabEnt.getSelectedRow() != -1) {
-                int ligneSelectionnerInventaire = tabInv.getSelectedRow();
-                int ligneSelectionnerEntretien = tabEnt.getSelectedRow();
-                Object keySelectionner = modelEnt.getValueAt(ligneSelectionnerEntretien, 0);
+                int ligneSelectionnerInventaire = tabInv.getSelectedRow(); // La ligne inventaire sélectionner
+                int ligneSelectionnerEntretien = tabEnt.getSelectedRow(); // La ligne entretien sélectionner
+                Object keySelectionner = modelEnt.getValueAt(ligneSelectionnerEntretien, 0); // La date/clé
 
                 listInventaire.get(ligneSelectionnerInventaire)
                         .removeEntretien(LocalDate.parse(String.valueOf(keySelectionner)));
@@ -671,8 +677,11 @@ public class ViewInv {
 
         for (int i = 0; i < listInventaire.size(); i++) {
             Inventaire item = listInventaire.get(i);
-            writer.write(item.getNom() + ", " + item.getCategorie() + ", " + item.getPrix() + ", " + item.getDateAchat()
-                    + ", " + item.getDescription());
+            writer.write(
+                    item.getNom().toString() + ", " + item.getNumSerie().toString() + ", "
+                            + item.getCategorie().toString() + ", "
+                            + String.valueOf(item.getPrix()) + ", " + String.valueOf(item.getDateAchat())
+                            + ", " + item.getDescription());
             writer.newLine();
             if (item.getEntretien().size() != 0) {
                 writer.write(String.valueOf(item.getEntretien()));

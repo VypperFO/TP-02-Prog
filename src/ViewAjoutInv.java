@@ -1,3 +1,4 @@
+
 /**
  * @author Félix-Olivier Latulippe
  * @DA 2173242
@@ -117,21 +118,20 @@ public class ViewAjoutInv {
             if (isValide()) {
                 try {
                     double prix = Double.parseDouble(txfPrix.getText()); // Prix objet
-                    Integer noSerie = 0; // numéro série objet
+                    String noSerie = txfNumSerie.getText(); // numéro série objet
                     String nom = txfNom.getText(); // nom objet
                     String description = txaDescription.getText(); // description objet
                     String categorie = cmbCategorie.getSelectedItem().toString(); // catégorie objet
                     Date dateRaw = dateChooser.getDate(); // date complète objet
-                    LocalDate date = dateRaw.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(); // date raffinée et au bon format objet
+                    LocalDate date = dateRaw.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(); // date raffinée
+                                                                                                       // et au bon
+                                                                                                       // format objet
                     LinkedHashMap<LocalDate, String> entretien = new LinkedHashMap<>(); // entretien objet
 
-                    if (txfNumSerie.getText().equals("")) {
-                        noSerie = null;
-                    } else {
-                        noSerie = Integer.parseInt(txfNumSerie.getText());
-                    }
-
-                    Inventaire item = new Inventaire(nom, description, categorie, prix, noSerie, date, entretien); // création du nouveau objet
+                    Inventaire item = new Inventaire(nom, description, categorie, prix, noSerie, date, entretien); // création
+                                                                                                                   // du
+                                                                                                                   // nouveau
+                                                                                                                   // objet
                     ViewInv.listInventaire.add(item);
 
                     dialog.dispose();
@@ -155,6 +155,7 @@ public class ViewAjoutInv {
 
     /**
      * Fonction qui permet de vérifier si tout les champs requis sont remplis
+     * 
      * @return Retourne true si valide, false si non
      */
     private boolean isValide() {

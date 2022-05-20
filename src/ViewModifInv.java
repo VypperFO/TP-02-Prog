@@ -1,3 +1,4 @@
+
 /**
  * @author Félix-Olivier Latulippe
  * @DA 2173242
@@ -77,7 +78,8 @@ public class ViewModifInv {
 
         // DATE CHOOSER
         LocalDate dateRaw = ViewInv.listInventaire.get(selectedRow).getDateAchat(); // Date complète
-        Date date = Date.from(dateRaw.atStartOfDay(ZoneId.systemDefault()).toInstant()); // Date raffinée et au bon format
+        Date date = Date.from(dateRaw.atStartOfDay(ZoneId.systemDefault()).toInstant()); // Date raffinée et au bon
+                                                                                         // format
 
         dateChooser = new JDateChooser(date);
         dateChooser.setPreferredSize(dimTf);
@@ -132,21 +134,23 @@ public class ViewModifInv {
                     String nom = txfNom.getText(); // Nom objet
                     String description = txaDescription.getText(); // Description objet
                     String categorie = cmbCategorie.getSelectedItem().toString(); // Catégorie objet
-                    Integer noSerie = Integer.parseInt(txfNumSerie.getText()); // Numéro série objet
+                    String noSerie = txfNumSerie.getText(); // Numéro série objet
                     double prix = Double.parseDouble(txfPrix.getText()); // Prix objet
                     Date dateRaw = dateChooser.getDate(); // Date complète objet
-                    LocalDate date = dateRaw.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(); // Date raffinée et au bon format
+                    LocalDate date = dateRaw.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(); // Date raffinée
+                                                                                                       // et au bon
+                                                                                                       // format
 
                     Inventaire item = ViewInv.listInventaire.get(selectedRow);
 
                     item.setNom(nom);
 
-                    if(!(description.equals("null")))
+                    if (!(description.equals("null")))
                         item.setDescription(description);
 
                     item.setCategorie(categorie);
 
-                    if(!(noSerie.equals("null")))
+                    if (!(noSerie.equals("null")))
                         item.setNumSerie(noSerie);
 
                     item.setPrix(prix);
@@ -166,6 +170,7 @@ public class ViewModifInv {
 
     /**
      * Fonction qui permet de vérifier si tout les champs requis sont remplis
+     * 
      * @return Retourne true si valide, false si non
      */
     private boolean isValide() {
